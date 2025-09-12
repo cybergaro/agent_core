@@ -110,21 +110,34 @@ class RealSmartImporter
         $property->n_room = (int) $single->Camere;
         $property->n_bathroom = (int) $single->Bagni;
         $property->type = ((int) $single->CategoriaImmobile) === 1 ? 'residential' : 'commercial';
-        // $property->category = 'house';
         $property->independent = true;
 
+        $categoryMap = [
+            'Appartamento' => 'apartment',
+            'Attività' => 'commercial-space',
+            'Box' => 'garage',
+            'Mansarda' => '',
+            'Negozio' => 'shop',
+            'Terreno' => 'agricultural-land',
+            'Ufficio' => 'office',
+            'Villa' => 'villa',
+            'Villino' => 'cottage',
+        ];
+
+        $property->category = $categoryMap[(string) $single->Tipologia] ?? null;
+
         $statusMap = [
-            'Libero' => 'free',
+            'Libero' => 'vacant',
             'Occupato' => 'occupied',
         ];
         $property->occupancy_status = $statusMap[(string) $single->StatoOccupazione] ?? null;
 
         $internalStatusMap = [
+            'Nuovo' => 'new', 
             'Ristrutturato' => 'renovated',
             'Buono' => 'good',
             'Ottimo Stato' => 'excellent',
-            'Nuovo' => 'new',
-            'Originale' => 'original',
+            'Originale' => 'original', 
             'Discreto' => 'fair',
             'Da Ristrutturare' => 'to_be_renovated',
         ];
@@ -138,10 +151,12 @@ class RealSmartImporter
             foreach ($single->ElencoFoto->Foto ?? [] as $imageUrl) {
                 $path = $this->downloadAndStoreImage((string) $imageUrl, 'properties_images');
 
-                $img = new PropertyImage();
-                $img->id_property = $property->id;
-                $img->path = $path;
-                $img->save();
+                if($path){
+                    $img = new PropertyImage();
+                    $img->id_property = $property->id;
+                    $img->path = $path;
+                    $img->save();
+                }
             }
         }
 
@@ -150,10 +165,12 @@ class RealSmartImporter
             foreach ($single->ElencoFoto360->Foto360 ?? [] as $img360Url) {
                 $path = $this->downloadAndStoreImage((string) $img360Url, 'properties_360_images');
 
-                $img = new PropertyImage360();
-                $img->id_property = $property->id;
-                $img->path = $path;
-                $img->save();
+                if($path){
+                    $img = new PropertyImage360();
+                    $img->id_property = $property->id;
+                    $img->path = $path;
+                    $img->save();
+                }
             }
         }
 
@@ -170,13 +187,15 @@ class RealSmartImporter
 
             foreach ([$single->Planimetria, $single->Planimetria2] as $planUrl) {
                 if ($planUrl) {
-                    $this->downloadAndStoreImage((string) $planUrl, 'properties_floor_plans');
-
-                    $img = new PropertyFloorPlan();
-                    $img->id_property = $property->id;
-                    $img->id_property_floor = $floor->id;
-                    $img->path = $path;
-                    $img->save();
+                    $path = $this->downloadAndStoreImage((string) $planUrl, 'properties_floor_plans');
+                    
+                    if($path){
+                        $img = new PropertyFloorPlan();
+                        $img->id_property = $property->id;
+                        $img->id_property_floor = $floor->id;
+                        $img->path = $path;
+                        $img->save();
+                    }
                 }
             }
         }

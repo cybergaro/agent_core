@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashController;
 use App\Http\Controllers\AgencyController;
 use App\Http\Controllers\CronController;
+use App\Http\Controllers\PropertiesController;
 
 Route::get("/", function (){
     return redirect()->route("login");
@@ -37,6 +38,8 @@ Route::get("/dashboard/{agencyUuid}/properties", [DashController::class, 'getPro
 Route::get("/dashboard/{agencyUuid}/settings", [DashController::class, 'settings'])->name("agency:settings");
 Route::get("/dashboard/{agencyUuid}/settings/import", [DashController::class, 'settingsImport'])->name("agency:settings:import");
 Route::post("/dashboard/{agencyUuid}/settings/import", [DashController::class, 'saveSettingsImport']);
+
+Route::get("/dashboard/property/new", [PropertiesController::class, 'newForm']);
 
 
 // Croon

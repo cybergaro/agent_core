@@ -16,6 +16,40 @@ use App\Models\Agency;
 
 class PropertiesController extends Controller
 {
-   
+    public function newForm(){
+
+        $propertyTypes = [
+            'apartment',
+            'single-family-house',
+            'multi-family-house',
+            'townhouse',
+            'villa',
+            'loft',
+            'studio-apartment',
+            'penthouse',
+            'farmhouse',
+            'cottage',
+            'office',
+            'shop',
+            'commercial-space',
+            'hotel',
+            'restaurant',
+            'showroom',
+            'retail',
+            'bar',
+            'theater',
+            'industrial-warehouse',
+            'logistics-hub',
+            'workshop',
+            'agricultural-land',
+            'building-land',
+            'garage',
+            'parking-lot',
+            'storage-unit'
+        ];
+
+        $header = false;
+        return view("dash.properties.new.show", compact("header", "propertyTypes"));
+    }
 
 }

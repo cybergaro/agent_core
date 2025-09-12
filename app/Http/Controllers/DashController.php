@@ -58,7 +58,7 @@ class DashController extends Controller
             ->orderBy("id", "DESC")
             ->get();
 
-        return view("dash.agency.properties.list", compact("properties"));
+        return view("dash.properties.list", compact("properties"));
     }
 
     public function settings($agencyUuid){

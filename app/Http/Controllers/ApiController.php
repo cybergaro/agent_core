@@ -64,10 +64,7 @@ class ApiController extends Controller
         $properties = $query->orderBy("properties.id", "DESC")
             ->paginate($request->inPage && $request->inPage < 30 ? $request->inPage : 30);
 
-        return response()->json([
-            "status" => 200,
-            "properties" => $properties,
-        ]);
+        return response()->json($properties);
     }
 
     public function getSingleProperty($uuid){

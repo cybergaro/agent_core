@@ -22,7 +22,7 @@
 
 </head>
 
-<body>
+<body class="overflow-hidden">
     <div class="flex h-screen bg-gray-100 font-sans">
 
         <!-- Sidebar -->
