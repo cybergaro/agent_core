@@ -9,7 +9,8 @@ use App\Models\PropertyRoom;
 use App\Models\PropertyImage;
 use App\Models\PropertyFloorPlan;
 use App\Models\PropertyImage360;
-// use App\Models\SystemLog;
+use App\Models\Log;
+
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -22,15 +23,12 @@ class RealSmartImporter
     {
         $agencies = Agency::where('enable_real_smart_importer', true)->get();
 
-        if ($agencies->isEmpty()) {
-            info('No agencies found with real smart importer enabled.');
-            return;
-        }
-
         foreach ($agencies as $agency) {
             if (!$agency->real_smart_xml_url || !$agency->id_user_owner) {
                 continue;
             }
+
+            Log::new('Real estate imports from "'.$agency->name.'" have begun.');
 
             try {
                 $xmlString = Http::retry(3, 500) // fino a 3 tentativi
@@ -57,16 +55,12 @@ class RealSmartImporter
                 }
 
             } catch (\Throwable $e) {
-
-                dd($e);
-                // \Log::error("Errore import RealSmart: " . $e->getMessage(), [
-                //     'agency_id' => $agency->id ?? null,
-                // ]);
+                Log::new('Error importing "'.$agency->name.'" from Real Smart \n'.$e->getMessage(), 'error');
             }
         }
     }
 
-    private function importSingleProperty($single, Agency $agency): void
+    public function importSingleProperty($single, Agency $agency): void
     {
 
         $property = Property::where('real_smart_id', (string) $single->Codice)
@@ -145,7 +139,7 @@ class RealSmartImporter
 
         $property->save();
 
-
+        /***
         // IMMAGINI (solo se nuove)
         if ($isNew || $property->images()->count() === 0) {
             foreach ($single->ElencoFoto->Foto ?? [] as $imageUrl) {
@@ -199,6 +193,7 @@ class RealSmartImporter
                 }
             }
         }
+        ***/
     }
 
     private function downloadAndStoreImage(string $url, string $directory)
@@ -215,13 +210,19 @@ class RealSmartImporter
             return $filename;
 
         } catch (Exception $e) {
-            \Log::error("Error saving image {$url}: " . $e->getMessage());
+            Log::new("Error saving image {$url} from Real Smart \n".$e->getMessage(), "error"); 
         }
     }
 
-    private function removeDeletedProperties(Agency $agency, $propertiesXml): void
+    private function removeDeletedProperties(Agency $agency, $properties): void
     {
-        $newIds = collect($propertiesXml)->map(fn($p) => (string) $p->Codice);
+        // $newIds = collect($propertiesXml)->map(fn($p) => (string) $p->Codice)->toArray();
+
+        $newIds = [];
+
+        foreach ($properties as $single) {
+            $newIds[] = strval($single->Codice);
+        }
 
         $toDelete = Property::where('id_agency', $agency->id)
             ->where('imported_from', 'realsmart')
@@ -229,18 +230,27 @@ class RealSmartImporter
             ->get();
 
         foreach ($toDelete as $property) {
-            foreach ($property->images as $img) {
-                Storage::disk('public')->delete($img->path);
+
+            foreach ($property->images() as $img) {
+                if($img->path){
+                    Storage::disk('public')->delete($img->path);
+                }
             }
-            foreach ($property->images360 as $img) {
-                Storage::disk('public')->delete($img->path);
+            foreach ($property->images360() as $img) {
+                if($img->path){
+                    Storage::disk('public')->delete($img->path);
+                }
             }
-            foreach ($property->floorPlans as $plan) {
-                Storage::disk('public')->delete($plan->path);
+            foreach ($property->floorPlans() as $plan) {
+                if ($plan->path) {
+                    Storage::disk('public')->delete($plan->path);
+                }
             }
-            $property->images()->delete();
-            $property->images360()->delete();
-            $property->floorPlans()->delete();
+
+            PropertyImage::where("id_property", $property->id)->delete();
+            PropertyImage360::where("id_property", $property->id)->delete();
+            PropertyFloorPlan::where("id_property", $property->id)->delete();
+            
             $property->delete();
         }
     }

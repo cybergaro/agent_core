@@ -20,7 +20,6 @@ class CronController extends Controller
 
         $reali->import();
 
-        dd("ok");
     }
 
 }
