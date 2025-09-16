@@ -46,4 +46,27 @@ return [
     'garage' => 'Garage o box auto',
     'parking-lot' => 'Parcheggio',
     'storage-unit' => 'Unità di deposito',
+
+    // Riscaldamento
+    'autonomous'       => 'Autonomo',
+    'centralized'      => 'Centralizzato',
+    'semi-centralized' => 'Semicentralizzato',
+
+    'radiators'   => 'Termosifoni',
+    'underfloor'  => 'A pavimento',
+    'wall'        => 'A parete',
+    'ceiling'     => 'A soffitto',
+    'fan_coil'    => 'Ventilconvettori',
+    'stove'       => 'Stufa',
+    'fireplace'   => 'Camino',
+    'heat_pump'   => 'Pompa di calore',
+
+    'gas'       => 'Gas metano',
+    'gpl'       => 'GPL',
+    'diesel'    => 'Gasolio',
+    'electric'  => 'Elettrico',
+    'pellet'    => 'Pellet',
+    'wood'      => 'Legna',
+    'solar'     => 'Solare termico',
+    'district'  => 'Teleriscaldamento',
 ];

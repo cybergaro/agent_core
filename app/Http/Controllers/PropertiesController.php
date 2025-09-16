@@ -13,6 +13,7 @@ use App\Services\BrevoMailer;
 use App\Models\User;
 use App\Models\EmailVerifyToken;
 use App\Models\Agency;
+use App\Models\Property;
 
 class PropertiesController extends Controller
 {
@@ -47,9 +48,54 @@ class PropertiesController extends Controller
             'parking-lot',
             'storage-unit'
         ];
+        
+        $heatingSystemManagment = ['autonomous', 'centralized', 'semi-centralized'];
+        $heatingSystemType = ['radiators', 'underfloor', 'wall', 'ceiling', 'fan_coil', 'stove', 'fireplace', 'heat_pump'];
+        $heatingSystemPower = ['gas', 'gpl', 'diesel', 'electric', 'pellet', 'wood', 'solar', 'district'];
 
         $header = true;
-        return view("dash.properties.new.show", compact("header", "propertyTypes"));
+        return view("dash.properties.new.show", compact("header", "propertyTypes", "heatingSystemManagment", "heatingSystemType", "heatingSystemPower"));
     }
 
+    public function new(Request $request){
+        $property = new Property();
+        
+        // generali
+        $property->name =                       $request->input("name");
+        $property->description =                $request->input("description");
+        $property->contract =                   $request->input("contract");
+        $property->type =                       $request->input("type");
+        $property->category =                   $request->input("category");
+
+        // prezzo       
+        $property->price =                      $request->input("price");
+
+        // costi        
+        $property->condominium_fees =           $request->input("condominium_fees");
+
+        // struttura    
+        $property->size =                       $request->input("size");
+        $property->n_floors =                   $request->input("n_floors");
+        $property->n_room =                     $request->input("n_room");
+        $property->n_bathroom =                 $request->input("n_bathroom");
+
+        // dettagli 
+        $property->parking =                    $request->has("parking");
+        $property->box =                        $request->has("box");
+        $property->elevator =                   $request->has("elevator");
+        $property->air_conditioning =           $request->has("air_conditioning");
+        $property->garden =                     $request->has("garden");
+        $property->independent =                $request->has("independent");
+        $property->green =                      $request->has("green");
+
+        // consumi
+        $property->ape =                        $request->input("ape");
+        $property->heating_system_management =  $request->input("heating_system_management");
+        $property->heating_system_type =        $request->input("heating_system_type");
+        $property->heating_system_power =       $request->input("heating_system_power");
+
+        dd($property);
+        // $property->save();
+
+    }
 }

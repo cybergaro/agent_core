@@ -44,4 +44,27 @@ return [
     'garage' => 'Garage or car box',
     'parking-lot' => 'Parking lot',
     'storage-unit' => 'Storage unit',
+
+    // Riscaldamento
+    'autonomous'       => 'Autonomous',
+    'centralized'      => 'Centralized',
+    'semi-centralized' => 'Semi-centralized',
+
+    'radiators'   => 'Radiators',
+    'underfloor'  => 'Underfloor heating',
+    'wall'        => 'Wall heating',
+    'ceiling'     => 'Ceiling heating',
+    'fan_coil'    => 'Fan coil',
+    'stove'       => 'Stove',
+    'fireplace'   => 'Fireplace',
+    'heat_pump'   => 'Heat pump',
+
+    'gas'       => 'Natural gas',
+    'gpl'       => 'LPG',
+    'diesel'    => 'Diesel',
+    'electric'  => 'Electric',
+    'pellet'    => 'Pellet',
+    'wood'      => 'Wood',
+    'solar'     => 'Solar thermal',
+    'district'  => 'District heating'
 ];

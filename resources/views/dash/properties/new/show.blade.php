@@ -8,10 +8,10 @@
     
     <h1 class="font-bold text-2xl mb-4 mt-3">Nuovo immobile</h1>
     
-    <form>
+    <form method="POST">
+        @csrf
 
         <!---------------------- Generali ---------------------->
-
         <div class="flex flex-col w-full max-w-4xl bg-white rounded-2xl px-8 py-5">
 
             <h2 class="font-bold text-xl">Generali</h2>
@@ -133,11 +133,11 @@
                 </div>
 
                 <div class="flex flex-col w-full">
-                    <label for="condominium_fees" class="mt-6 text-sm font-semibold"><i class="fa-solid fa-stairs"></i> Piani dell'immobile</label>
+                    <label for="n_floors" class="mt-6 text-sm font-semibold"><i class="fa-solid fa-stairs"></i> Piani dell'immobile</label>
                     <input
                         type="number"
-                        name="condominium_fees"
-                        id="condominium_fees"
+                        name="n_floors"
+                        id="n_floors"
                         min="1"
                         value="1"
                         placeholder="Spese condominiali"
@@ -247,8 +247,8 @@
             <label class="flex items-center gap-2 text-sm text-gray-700 cursor-pointer mt-5">
             <input
                 type="checkbox"
-                name="independent"
-                id="independent"
+                name="green"
+                id="green"
                 class="h-5 w-5 text-indigo-600 border-gray-400 rounded-lg focus:ring-indigo-500 focus:ring-offset-2 transition duration-150 ease-in-out"
             >
                 Immobile contrassegnato come ECO sostenibile
@@ -256,15 +256,16 @@
             </label>
         </div>
 
+        <!-------------------- consumi -------------------->
         <div class="flex flex-col w-full max-w-4xl bg-white rounded-2xl px-8 py-5 mt-6">
             <h2 class="font-bold text-xl">Consumi</h2>
 
             <div class="flex gap-6">
                 <div class="flex flex-col w-full">
-                    <label for="contract" class="mt-6 text-sm font-semibold">APE</label>
+                    <label for="ape" class="mt-6 text-sm font-semibold">APE</label>
                     <select 
-                        name="contract" 
-                        id="contract"
+                        name="ape" 
+                        id="ape"
                         class="mt-1 border border-gray-300 rounded-lg outline-none px-4 py-3 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
                     >
                         <option value=""></option>
@@ -282,9 +283,58 @@
                 </div>
                 
             </div>
-        </div>
+            <div class="flex gap-6">
+                <div class="flex flex-col w-full">
+                    <label for="heating_system_management" class="mt-6 text-sm font-semibold"><i class="fa-solid fa-wrench"></i> Gestione sistema di risaldamento</label>
+                    <select 
+                        name="heating_system_management" 
+                        id="heating_system_management"
+                        class="mt-1 border border-gray-300 rounded-lg outline-none px-4 py-3 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                    >   
+                        <option value=""></option>
+                        <?php foreach ($heatingSystemManagment as $single) { ?>
+                            <option value="<?= $single ?>"><?= __("property.".$single) ?></option>
+                        <?php } ?>
+                    </select>
+                </div>
     
+                <div class="flex flex-col w-full">
+                    <label for="heating_system_type" class="mt-6 text-sm font-semibold"><i class="fa-solid fa-file-contract"></i> Tipologia sistema di risaldamento</label>
+                    <select 
+                        name="heating_system_type" 
+                        id="heating_system_type"
+                        class="mt-1 border border-gray-300 rounded-lg outline-none px-4 py-3 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                    >   
+                        <option value=""></option>
+                        <?php foreach ($heatingSystemType as $single) { ?>
+                            <option value="<?= $single ?>"><?= __("property.".$single) ?></option>
+                        <?php } ?>
+                    </select>
+                </div>
 
+            </div>
+            
+            <div class="flex flex-col w-full">
+                <label for="heating_system_power" class="mt-6 text-sm font-semibold"><i class="fa-solid fa-file-contract"></i> Alimentazione sistema di risaldamento</label>
+                <select 
+                    name="heating_system_power" 
+                    id="heating_system_power"
+                    class="mt-1 border border-gray-300 rounded-lg outline-none px-4 py-3 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                >   
+                    <option value=""></option>
+                    <?php foreach ($heatingSystemPower as $single) { ?>
+                        <option value="<?= $single ?>"><?= __("property.".$single) ?></option>
+                    <?php } ?>
+                </select>
+            </div>
+        </div>
+
+        <button
+            class="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 mt-6 font-medium transition"
+        >
+            <i class="fa-solid fa-upload"></i>
+            Inserisci immobile
+        </button>
     </form>
 </div>  
 @endsection

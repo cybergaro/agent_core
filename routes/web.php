@@ -43,6 +43,7 @@ Route::prefix('dashboard')->group(function () {
         
         Route::get("/properties", [DashController::class, 'getProperties'])->name("agency:properties");
         Route::get("/property/new", [PropertiesController::class, 'newForm'])->name("agency:properties:new");
+        Route::post("/property/new", [PropertiesController::class, 'new']);
         
         Route::get("/settings", [DashController::class, 'settings'])->name("agency:settings");
         Route::get("/settings/import", [DashController::class, 'settingsImport'])->name("agency:settings:import");
