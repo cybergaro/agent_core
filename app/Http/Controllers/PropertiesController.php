@@ -48,7 +48,7 @@ class PropertiesController extends Controller
             'storage-unit'
         ];
 
-        $header = false;
+        $header = true;
         return view("dash.properties.new.show", compact("header", "propertyTypes"));
     }
 

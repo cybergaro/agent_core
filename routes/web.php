@@ -25,23 +25,33 @@ Route::controller(AuthController::class)->group(function () {
 
 Route::get('/logout', [AuthController::class, 'logout'])->name("logout");
 
+
 // Dashboard
-Route::get("/dashboard", [DashController::class, 'default'])->name("dashboard");
-Route::get("/dashboard/agency/new", [AgencyController::class, 'showNew'])->name("agency:new");
-Route::post("/dashboard/agency/new", [AgencyController::class, 'new']);
+Route::prefix('dashboard')->group(function () {
 
-Route::get("/dashboard/user", [AuthController::class, 'new']);
+    Route::middleware("auth")->group(function () { 
+        Route::get("/", [DashController::class, 'default'])->name("dashboard");
+        Route::get("/agency/new", [AgencyController::class, 'showNew'])->name("agency:new");
+        Route::post("/agency/new", [AgencyController::class, 'new']);
 
-// serve un middleware che verifica che l'utente è abilitato a vedere i dati di questa agenzia
-Route::get("/dashboard/{agencyUuid}", [DashController::class, 'show'])->name("agency:dash");
-Route::get("/dashboard/{agencyUuid}/properties", [DashController::class, 'getProperties'])->name("agency:properties");
-Route::get("/dashboard/{agencyUuid}/settings", [DashController::class, 'settings'])->name("agency:settings");
-Route::get("/dashboard/{agencyUuid}/settings/import", [DashController::class, 'settingsImport'])->name("agency:settings:import");
-Route::post("/dashboard/{agencyUuid}/settings/import", [DashController::class, 'saveSettingsImport']);
+        Route::get("/user", [AuthController::class, 'new']);
+    });
+    
+    Route::prefix("{agencyUuid}")->middleware('agency.canAccess')->group(function () {
 
-Route::get("/dashboard/property/new", [PropertiesController::class, 'newForm']);
+        Route::get("/", [DashController::class, 'show'])->name("agency:dash");
+        
+        Route::get("/properties", [DashController::class, 'getProperties'])->name("agency:properties");
+        Route::get("/property/new", [PropertiesController::class, 'newForm'])->name("agency:properties:new");
+        
+        Route::get("/settings", [DashController::class, 'settings'])->name("agency:settings");
+        Route::get("/settings/import", [DashController::class, 'settingsImport'])->name("agency:settings:import");
+        Route::post("/settings/import", [DashController::class, 'saveSettingsImport']);
+
+    });
+
+});
 
 
 // Croon
-
 Route::get("/properties_import", [CronController::class, 'propertiesImport']);
