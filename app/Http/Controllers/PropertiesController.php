@@ -78,6 +78,8 @@ class PropertiesController extends Controller
         $property->n_floors =                   $request->input("n_floors");
         $property->n_room =                     $request->input("n_room");
         $property->n_bathroom =                 $request->input("n_bathroom");
+        $property->year_production =            $request->input("year_production");
+        $property->floor =                      $request->input("floor");
 
         // dettagli 
         $property->parking =                    $request->has("parking");
@@ -93,6 +95,11 @@ class PropertiesController extends Controller
         $property->heating_system_management =  $request->input("heating_system_management");
         $property->heating_system_type =        $request->input("heating_system_type");
         $property->heating_system_power =       $request->input("heating_system_power");
+
+        // condizione attuale
+        $property->occupancy_status =           $request->input("occupancy_status");
+        $property->internal_condition =         $request->input("internal_condition");
+        $property->furniture =                  $request->input("furniture");
 
         dd($property);
         // $property->save();
