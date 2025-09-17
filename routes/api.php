@@ -9,6 +9,6 @@ use App\Http\Controllers\ApiController;
 //     return $request->user();
 // });
 
-Route::get("/search", [ApiController::class, 'propertySearch']);
+Route::get("/properties", [ApiController::class, 'propertySearch']);
 
-Route::get("/property/{uuid}/get", [ApiController::class, 'getSingleProperty']);
+Route::get("/property/{uuid}", [ApiController::class, 'getSingleProperty']);

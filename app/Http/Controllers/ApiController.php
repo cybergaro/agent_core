@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 use App\Models\Agency;
 use App\Models\Property;
@@ -20,9 +22,13 @@ class ApiController extends Controller
                 "properties.contract",
                 "properties.type",
                 "properties.category",
+                "properties.price",
+                "properties.size",
+                "properties.address",
                 "properties.n_room",
                 "properties.n_bathroom",
-                "properties_images.path as image_path",
+                "properties.green",
+                DB::raw("CONCAT('" . env("APP_URL") .Storage::url('properties_images').'/'. "', properties_images.path) as image_url")
             );
         }else{
             $query = Property::select("properties.*");
@@ -36,8 +42,8 @@ class ApiController extends Controller
             }
         );
 
-        if($request->uuidAgency){
-            $agency = Agency::where("uuid", $request->uuidAgency)->first();
+        if($request->agency){
+            $agency = Agency::where("uuid", $request->agency)->first();
 
             if(!$agency){
                 return response()->json([
@@ -61,8 +67,12 @@ class ApiController extends Controller
             $query->whereIn("category", $request->categories);
         }
 
+        if($request->similarTo){
+            $query->where("uuid", "!=", $request->similarTo);
+        }
+
         $properties = $query->orderBy("properties.id", "DESC")
-            ->paginate($request->inPage && $request->inPage < 30 ? $request->inPage : 30);
+            ->paginate($request->limit && $request->limit < 30 ? $request->limit : 30);
 
         return response()->json($properties);
     }
@@ -77,15 +87,18 @@ class ApiController extends Controller
             ]);
         }
 
-        $images = PropertyImage::where("id_property", $property->id)->get();
-        $images360 = PropertyImage360::where("id_property", $property->id)->get();
+        $images = PropertyImage::select(
+            DB::raw("CONCAT('" . env("APP_URL") .Storage::url('properties_images').'/'. "', properties_images.path) as image_url")
+        )->where("id_property", $property->id)->get();
+        
+        $images360 = PropertyImage360::select(
+            DB::raw("CONCAT('" . env("APP_URL") .Storage::url('properties_360_images').'/'. "', properties_360_images.path) as image_url")
+        )->where("id_property", $property->id)->get();
 
-        return response()->json([
-            "status" => 200,
-            "property" => $property,
-            "images" => $images,
-            "images360" => $images360,
-        ]);
+        $property["images"] = $images->pluck('image_url');
+        $property["images360"] = $images360->pluck('image_url');
+
+        return response()->json($property);
 
     }
 }

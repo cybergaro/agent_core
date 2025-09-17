@@ -408,7 +408,63 @@
             </div>
             
         </div>
+        
+        <div class="flex flex-col w-full max-w-4xl bg-white rounded-2xl px-8 py-5 mt-6">
+            <h2 class="font-bold text-xl">Posizione</h2>
+            
+            <label for="address" class="mt-6 text-sm font-semibold">Indirizzo <span class="text-red-500">*</span></label>
+            <div class="flex w-full gap-3 items-center">
+                <input
+                    type="text"
+                    name="address"
+                    id="address"
+                    placeholder="Es: Via Roma 33"
+                    min="0"
+                    class="mt-1 border border-gray-300 rounded-lg outline-none px-4 py-3 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 w-full"
+                >
+                <button id="search-button" 
+                    class="cursor-pointer h-8 w-8" 
+                    type="button"
+                >
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </div>
 
+            <div class="flex gap-6">
+                <div class="flex flex-col w-full">
+                    <label for="zip_code" class="mt-6 text-sm font-semibold">CAP</label>
+                    <input 
+                        name="zip_code" 
+                        id="zip_code"
+                        class="mt-1 border border-gray-300 rounded-lg outline-none px-4 py-3 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                    />
+                </div>
+            </div>
+
+            <div class="flex gap-6">
+                <div class="flex flex-col w-40">
+                    <label for="lat" class="mt-6 text-sm font-semibold">Latitudine</label>
+                    <input 
+                        disabled
+                        name="lat" 
+                        id="lat"
+                        class="mt-1 border border-gray-300 bg-gray-100 rounded-lg outline-none px-4 py-3 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                    />
+                </div>
+                <div class="flex flex-col w-40">
+                    <label for="lng" class="mt-6 text-sm font-semibold">Longitudine</label>
+                    <input 
+                        disabled
+                        name="lng" 
+                        id="lng"
+                        class="mt-1 border border-gray-300 bg-gray-100 rounded-lg outline-none px-4 py-3 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                    />
+                </div>
+            </div>
+
+            <div id="map" class="h-100 w-full rounded-xl mt-6"></div>
+        </div>
+        
         <button
             class="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 mt-6 font-medium transition"
         >
@@ -417,4 +473,78 @@
         </button>
     </form>
 </div>  
+
+<script>
+
+    let map;
+    let geocoder;
+    let marker;
+
+    function initMap() {
+        // Inizializza la mappa centrata sull'Italia
+        map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 6,
+            center: { lat: 41.9028, lng: 12.4964 },
+        });
+        
+        geocoder = new google.maps.Geocoder();
+
+        const searchButton = document.getElementById("search-button");
+        searchButton.addEventListener("click", () => {
+            geocodeAddress();
+        });
+    }
+
+    function geocodeAddress() {
+        const address = document.getElementById("address").value;
+
+        geocoder.geocode({ address: address }, (results, status) => {
+            if (status === "OK") {
+                const location = results[0].geometry.location;
+                const lat = location.lat();
+                const lng = location.lng();
+                const formattedAddress = results[0].formatted_address;
+
+                let postalCode = '';
+                let province = '';
+                let region = '';
+                
+                result.address_components.forEach(component => {
+                    if (component.types.includes('postal_code')) {
+                        postalCode = component.long_name;
+                    }
+                    if (component.types.includes('administrative_area_level_2')) {
+                        province = component.long_name;
+                    }
+                    if (component.types.includes('administrative_area_level_1')) {
+                        region = component.long_name;
+                    }
+                });
+                
+                document.getElementById("lat").value = lat;
+                document.getElementById("lng").value = lng;
+                console.log(results[0])
+
+                map.setCenter(location);
+                map.setZoom(15);
+                
+                // Rimuovi il marker precedente se esiste e crea quello nuovo
+                if (marker) {
+                    marker.setMap(null);
+                }
+                marker = new google.maps.Marker({
+                    map: map,
+                    position: location
+                });
+
+            } else {
+                // Gestisce gli errori
+                alert("Geocode non riuscito per il seguente motivo: " + status);
+            }
+        });
+    }
+</script>
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= env("GOOGLE_MAPS_API_KEY") ?>&libraries=geocoding&callback=initMap"></script>
+
 @endsection

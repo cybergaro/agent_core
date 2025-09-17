@@ -139,7 +139,6 @@ class RealSmartImporter
 
         $property->save();
 
-        /***
         // IMMAGINI (solo se nuove)
         if ($isNew || $property->images()->count() === 0) {
             foreach ($single->ElencoFoto->Foto ?? [] as $imageUrl) {
@@ -193,7 +192,7 @@ class RealSmartImporter
                 }
             }
         }
-        ***/
+
     }
 
     private function downloadAndStoreImage(string $url, string $directory)
