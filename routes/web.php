@@ -14,7 +14,7 @@ Route::get("/", function (){
 })->name('home');
 
 // Auth 
-Route::controller(AuthController::class)->group(function () {
+Route::middleware("guest")->controller(AuthController::class)->group(function () {
     Route::get('/login', 'showLogin')->name("login");
     Route::post('/login', 'login');
     Route::get('/registration', 'showRegistration')->name("registration");
