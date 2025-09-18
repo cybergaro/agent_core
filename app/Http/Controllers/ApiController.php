@@ -55,16 +55,23 @@ class ApiController extends Controller
             $query->where("id_agency", $agency->id);
         }
 
-        if($request->contracts){
+        if($request->contracts && count($request->contracts)){
             $query->whereIn("contract", $request->contracts);
         }
 
-        if($request->types){
+        if($request->types && count($request->types)){
             $query->whereIn("type", $request->types);
         }
 
-        if($request->categories){
+        if($request->categories && count($request->categories)){
             $query->whereIn("category", $request->categories);
+        }
+
+        $radius = 2; // raggio di ricerca in (Km)
+
+        if($request->lat && $request->lng){
+            $query->whereRaw("(6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) <= ?", 
+                [$request->lat, $request->lng, $request->lat, $radius]);
         }
 
         if($request->similarTo){

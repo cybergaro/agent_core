@@ -83,4 +83,22 @@ class DashController extends Controller
 
         return redirect()->back()->withSuccess("Impostazioni modificate");
     }   
+
+    public function agencySettingsShow($agencyUuid){
+        $agency = Agency::where("uuid", $agencyUuid)->first();
+
+        return view("dash.agency.settings.agency", compact("agency"));
+    }
+
+    public function agencySettings($agencyUuid, Request $request){
+        $agency = Agency::where("uuid", $agencyUuid)->first();
+
+        $agency->name =         $request->input("name");
+        $agency->email =        $request->input("email");
+        $agency->phone =        $request->input("phone");
+        $agency->website =      $request->input("website");
+        $agency->save();
+
+        return redirect()->back()->withSuccess("Impostazioni modificate");
+    }
 }

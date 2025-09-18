@@ -49,6 +49,9 @@ Route::prefix('dashboard')->group(function () {
         Route::get("/settings/import", [DashController::class, 'settingsImport'])->name("agency:settings:import");
         Route::post("/settings/import", [DashController::class, 'saveSettingsImport']);
 
+        Route::get("/settings/agency", [DashController::class, 'agencySettingsShow']);
+        Route::post("/settings/agency", [DashController::class, 'agencySettings']);
+
     });
 
 });
