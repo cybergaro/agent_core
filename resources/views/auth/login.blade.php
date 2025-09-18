@@ -1,4 +1,4 @@
-@extends('default')
+@extends('dashboard')
 
 @section('content')
 <div class="flex h-screen w-full bg-gray-100">

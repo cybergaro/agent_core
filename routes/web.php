@@ -8,6 +8,7 @@ use App\Http\Controllers\DashController;
 use App\Http\Controllers\AgencyController;
 use App\Http\Controllers\CronController;
 use App\Http\Controllers\PropertiesController;
+use App\Http\Controllers\SocialController;
 
 Route::get("/", function (){
     return redirect()->route("login");
@@ -45,6 +46,8 @@ Route::prefix('dashboard')->group(function () {
         Route::get("/property/new", [PropertiesController::class, 'newForm'])->name("agency:properties:new");
         Route::post("/property/new", [PropertiesController::class, 'new']);
         
+        Route::get("/social", [SocialController::class, 'show'])->name("agency:social");
+
         Route::get("/settings", [DashController::class, 'settings'])->name("agency:settings");
         Route::get("/settings/import", [DashController::class, 'settingsImport'])->name("agency:settings:import");
         Route::post("/settings/import", [DashController::class, 'saveSettingsImport']);
