@@ -69,7 +69,9 @@
 <script>
     const login = () => {
         const email = document.getElementById("email").value,
-              password = document.getElementById("password").value;
+            password = document.getElementById("password").value,
+            captcha = document.getElementById("g-recaptcha-response").value;
+
 
         if (!email || !password) {
             formError("Tutti i campi sono obbligatori");
