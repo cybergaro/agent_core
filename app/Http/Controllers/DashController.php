@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 use App\Services\BrevoMailer;
@@ -36,7 +37,13 @@ class DashController extends Controller
         $agency = Agency::where("uuid", $agencyUuid)->first();
         $title = $agency->name;
 
-        return view("dash.agency.home", compact("title"));
+        $propertyType = DB::table('properties')
+            ->select('type', DB::raw('COUNT(*) as total'))
+            ->where("id_agency", $agency->id)
+            ->groupBy('type')
+            ->get();
+    
+        return view("dash.agency.home", compact("title", "propertyType"));
     }   
 
     public function getProperties($agencyUuid){
@@ -58,7 +65,9 @@ class DashController extends Controller
             ->orderBy("id", "DESC")
             ->get();
 
-        return view("dash.properties.list", compact("properties"));
+        $title = "Immobili";
+        
+        return view("dash.properties.list", compact("properties", "title"));
     }
 
     public function settings($agencyUuid){
@@ -68,7 +77,9 @@ class DashController extends Controller
     public function settingsImport($agencyUuid){
         $agency = Agency::where("uuid", $agencyUuid)->first();
 
-        return view("dash.agency.settings.import", compact("agency"));
+        $title = "Impostazioni importazione";
+
+        return view("dash.agency.settings.import", compact("agency", "title"));
     }   
 
     public function saveSettingsImport($agencyUuid, Request $request){
