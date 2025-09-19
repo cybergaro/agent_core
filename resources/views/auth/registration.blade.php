@@ -73,6 +73,11 @@
                 class="mt-1 border border-gray-300 rounded-lg outline-none px-4 py-3 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
             >
 
+            <!-- Recaptcha -->
+            <?php if(env("RECAPTCHA_ENABLE")){ ?>
+                <div class="g-recaptcha mt-6" data-sitekey="<?= env('RECAPTCHA_SITE_KEY') ?>"></div>
+            <?php } ?>
+
             <!-- Bottone di Registrazione -->
             <input type="submit"
                    value="Registrati"
@@ -96,6 +101,8 @@
     </div>
 </div>
 
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
 <script>
     /**
      * @brief Funzione per validare il modulo di registrazione lato client.
@@ -106,6 +113,7 @@
         const email = document.getElementById("email").value;
         const password = document.getElementById("password").value;
         const passwordConfirmation = document.getElementById("password_confirmation").value;
+        const captcha = document.getElementById("g-recaptcha-response").value;
 
         // Validazione: tutti i campi sono obbligatori
         if (!name || !email || !password || !passwordConfirmation) {
@@ -125,6 +133,14 @@
             formError("Le password non corrispondono");
             return false;
         }
+
+        //  Validazione: captcha eseguito
+        <?php if(env("RECAPTCHA_ENABLE")){ ?>
+            if (!captcha) {
+                formError("Completa il reCAPTCHA");
+                return false;
+            }
+        <?php } ?>
 
         return true;
     }

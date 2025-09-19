@@ -39,6 +39,11 @@
                 <a href="/password/reset" class="text-sm text-blue-600 hover:underline">Password dimenticata?</a>
             </div>
 
+            <!-- Recaptcha -->
+            <?php if(env("RECAPTCHA_ENABLE")){ ?>
+                <div class="g-recaptcha mt-6" data-sitekey="<?= env('RECAPTCHA_SITE_KEY') ?>"></div>
+            <?php } ?>
+
             <input type="submit"
                    value="Accedi"
                    class="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 mt-6 font-medium transition"
@@ -59,6 +64,8 @@
     </div>
 </div>
 
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
 <script>
     const login = () => {
         const email = document.getElementById("email").value,
@@ -75,6 +82,14 @@
             formError("Inserisci un indirizzo email valido");
             return false;
         }
+
+        //  Validazione: captcha eseguito
+        <?php if(env("RECAPTCHA_ENABLE")){ ?>
+            if (!captcha) {
+                formError("Completa il reCAPTCHA");
+                return false;
+            }
+        <?php } ?>
     }
 
     const formError = (text) => {

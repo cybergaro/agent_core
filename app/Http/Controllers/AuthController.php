@@ -25,6 +25,25 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+        // eseguo la verifica del captcha
+        $token = $request->input('g-recaptcha-response') ?? $request->input('recaptcha_token');
+
+        $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+            'secret'   => env('RECAPTCHA_SECRET_KEY'),
+            'response' => $token,
+            'remoteip' => $request->ip(),
+        ]);
+
+        $result = $response->json();
+
+        if (isset($result['success']) && $result['success'] === true) {
+            // Utente umano
+        } else {
+            return back()->withErrors(['captcha' => 'Verifica reCAPTCHA fallita, riprova.']);
+        }
+
+        // verifico gli input
+
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|min:6',
@@ -136,6 +155,25 @@ class AuthController extends Controller
 
     public function registration(Request $request)
     {
+        // eseguo la verifica del captcha
+        $token = $request->input('g-recaptcha-response') ?? $request->input('recaptcha_token');
+
+        $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+            'secret'   => env('RECAPTCHA_SECRET_KEY'),
+            'response' => $token,
+            'remoteip' => $request->ip(),
+        ]);
+
+        $result = $response->json();
+
+        if (isset($result['success']) && $result['success'] === true) {
+            // Utente umano
+        } else {
+            return back()->withErrors(['captcha' => 'Verifica reCAPTCHA fallita, riprova.']);
+        }
+
+        // eseguo il validate degli input
+
         $validator = Validator::make($request->all(), [
             'name' => 'string|max:255',
             'surname' => 'string|max:255',
