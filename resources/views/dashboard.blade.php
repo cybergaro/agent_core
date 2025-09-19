@@ -28,44 +28,47 @@
         <!-- Sidebar -->
         <?php if(!isset($header) || $header == true){ ?>
             <?php $uuid = request()->route('agencyUuid'); ?>
-            <aside class="w-64 bg-white shadow-lg flex flex-col">
-                <!-- Logo -->
-                <div class="flex items-center gap-3 px-6 py-5 border-b border-gray-200">
-                    <img src="/img/logoBlu.png" alt="Logo Agent Core" class="h-10 w-10">
-                    <span class="text-xl font-semibold text-gray-800">Agent Core</span>
+            <aside class="p-5 h-screen">
+                <div class="w-64 flex flex-col h-full gap-2">
+                    <!-- Logo -->
+
+                    <div class="flex items-center gap-3 px-6 py-5 bg-white rounded-3xl">
+                        <img src="/img/logoBlu.png" alt="Logo Agent Core" class="h-10 w-10">
+                        <span class="text-xl font-semibold text-gray-800">Agent Core</span>
+                    </div>
+
+                    <!-- Menu -->
+                    <nav class="flex-1 px-4 py-5 space-y-1 bg-white rounded-3xl">
+                        
+                        <a href="/dashboard/<?= $uuid ?>" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-blue-100 hover:text-blue-700 transition">
+                            <i class="fa-solid fa-home"></i> <span>Home</span>
+                        </a>
+
+                        <a href="/dashboard/<?= $uuid ?>/properties" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-blue-100 hover:text-blue-700 transition">
+                            <i class="fa-solid fa-shop"></i> <span>Immobili</span>
+                        </a>
+
+                        <a href="/dashboard/<?= $uuid ?>/properties" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-blue-100 hover:text-blue-700 transition">
+                            <i class="fa-solid fa-person-digging"></i> <span>Cantieri</span>
+                        </a>
+
+                        <a href="/dashboard/<?= $uuid ?>/social" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-blue-100 hover:text-blue-700 transition">
+                            <i class="fa-solid fa-share-nodes"></i> <span>Social & Condivisione</span>
+                        </a>
+
+                        <a href="/dashboard/<?= $uuid ?>/settings" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-blue-100 hover:text-blue-700 transition">
+                            <i class="fa-solid fa-gear"></i> <span>Impostazioni</span>
+                        </a>
+                    </nav>
+
+                    <!-- Logout in basso -->
+                    <form method="GET" action="/logout" class="px-4 py-4 bg-white rounded-3xl">
+                        <button type="submit" class="flex items-center gap-2 w-full px-3 py-2 rounded-lg transition cursor-pointer">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            <span>Logout</span>
+                        </button>
+                    </form>
                 </div>
-
-                <!-- Menu -->
-                <nav class="flex-1 px-4 py-6 space-y-2">
-                    
-                    <a href="/dashboard/<?= $uuid ?>" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-blue-100 hover:text-blue-700 transition">
-                        <i class="fa-solid fa-home"></i> <span>Home</span>
-                    </a>
-
-                    <a href="/dashboard/<?= $uuid ?>/properties" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-blue-100 hover:text-blue-700 transition">
-                        <i class="fa-solid fa-shop"></i> <span>Immobili</span>
-                    </a>
-
-                    <a href="/dashboard/<?= $uuid ?>/properties" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-blue-100 hover:text-blue-700 transition">
-                        <i class="fa-solid fa-person-digging"></i> <span>Cantieri</span>
-                    </a>
-
-                    <a href="/dashboard/<?= $uuid ?>/social" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-blue-100 hover:text-blue-700 transition">
-                        <i class="fa-solid fa-share-nodes"></i> <span>Social & Condivisione</span>
-                    </a>
-
-                    <a href="/dashboard/<?= $uuid ?>/settings" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-blue-100 hover:text-blue-700 transition">
-                        <i class="fa-solid fa-gear"></i> <span>Impostazioni</span>
-                    </a>
-                </nav>
-
-                <!-- Logout in basso -->
-                <form method="GET" action="/logout" class="px-4 py-4 border-t border-gray-200">
-                    <button type="submit" class="flex items-center gap-2 w-full px-3 py-2 rounded-lg transition cursor-pointer">
-                        <i class="fa-solid fa-right-from-bracket"></i>
-                        <span>Logout</span>
-                    </button>
-                </form>
             </aside>
         <?php } ?>
 

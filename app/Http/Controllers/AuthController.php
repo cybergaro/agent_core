@@ -84,7 +84,10 @@ class AuthController extends Controller
     public function showUserSettings()
     {
         $user = Auth::user();
-        return view('dash.account.show', compact('user'));
+        $header = false;
+        $title = "Impostazioni utente";
+
+        return view('dash.account.show', compact('user', "header", "title"));
     }
 
     public function saveUserSettings(Request $request){
@@ -98,27 +101,24 @@ class AuthController extends Controller
         $user->name = $request->input("name");
         $user->surname = $request->input("surname");
         $user->phone = $request->input("phone");
-        $user->promotional_emails = $request->has("promotional_emails");
-
-        if($user->role == "admin"){
-            $user->admin_order_notify = $request->has("admin_order_notify");
-        }
 
         $user->save();
 
         return redirect()->back()->with('success', 'Impostazioni salvate con successo');
     }
 
+    public function showChangePassword(){
+        $header = false;
+        $title = "Modifica password";
+
+        return view('dash.account.password', compact("header", "title"));
+    }
+
     public function changePassword(Request $request){
         $user = Auth::user();
 
-        // $request->validate([
-        //     'old_password' => 'required',
-        //     'password' => 'required|min:6|confirmed',
-        // ]);
-
-        if (Hash::check($request->old_password, $user->password)) {
-            $user->password = $request->input("password");
+        if (Hash::check($request->old_pass, $user->password)) {
+            $user->password = $request->input("new_pass");
             $user->save();
             
             return redirect()->back()->with('success', 'Password cambiata con successo');

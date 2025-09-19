@@ -35,7 +35,11 @@ Route::prefix('dashboard')->group(function () {
         Route::get("/agency/new", [AgencyController::class, 'showNew'])->name("agency:new");
         Route::post("/agency/new", [AgencyController::class, 'new']);
 
-        Route::get("/user", [AuthController::class, 'new']);
+        Route::get("/user", [AuthController::class, 'showUserSettings']);
+        Route::post("/user", [AuthController::class, 'saveUserSettings']);
+        
+        Route::get("/user/password", [AuthController::class, 'showChangePassword']);
+        Route::post("/user/password", [AuthController::class, 'changePassword']);
     });
     
     Route::prefix("{agencyUuid}")->middleware('agency.canAccess')->group(function () {

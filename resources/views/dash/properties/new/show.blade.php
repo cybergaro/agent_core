@@ -3,7 +3,7 @@
 @section('content')
 <div class="p-10">
     <div class="mb-2 w-full max-w-4xl">
-        <a href="" class="text-blue-600"><i class="fa-solid fa-arrow-left"></i> Torna agli immobili</a>
+        <a href="/dashboard/<?=request()->route('agencyUuid')?>/properties" class="text-blue-600"><i class="fa-solid fa-arrow-left"></i> Torna agli immobili</a>
     </div>
     
     <h1 class="font-bold text-2xl mb-4 mt-3">Nuovo immobile</h1>

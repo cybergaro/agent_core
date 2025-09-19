@@ -49,5 +49,20 @@
         </div>
     </a>
 
+    <a href="/dashboard/user/password" class="group block rounded-2xl bg-white p-6 shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+        <div class="flex items-start gap-4">
+            <div class="flex-shrink-0">
+                <div class="h-14 w-14 rounded-lg bg-green-100 flex items-center justify-center group-hover:bg-green-200 transition">
+                    <i class="fa-solid fa-key"></i>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-lg font-semibold text-gray-900">Modifica password</h3>
+                <p class="mt-1 text-sm text-gray-600">In questa sezione potrai modificare la password del tuo account</p>
+            </div>
+        </div>
+    </a>
+
 </div>
 @endsection
