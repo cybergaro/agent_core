@@ -214,7 +214,7 @@ class RealSmartImporter
             return $filename;
 
         } catch (Exception $e) {
-            Log::new("Error saving image {$url} from Real Smart \n".$e->getMessage(), "error"); 
+            // Log::new("Error saving image {$url} from Real Smart \n".$e->getMessage(), "error"); 
         }
     }
 
