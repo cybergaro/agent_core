@@ -52,6 +52,10 @@
                             <i class="fa-solid fa-person-digging"></i> <span>Cantieri</span>
                         </a>
 
+                        <a href="/dashboard/<?= $uuid ?>/website" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-blue-100 hover:text-blue-700 transition">
+                            <i class="fa-solid fa-globe"></i> <span>Sito web</span>
+                        </a>
+
                         <a href="/dashboard/<?= $uuid ?>/social" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-blue-100 hover:text-blue-700 transition">
                             <i class="fa-solid fa-share-nodes"></i> <span>Social & Condivisione</span>
                         </a>

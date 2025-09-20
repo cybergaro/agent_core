@@ -69,4 +69,19 @@ return [
     'wood'      => 'Legna',
     'solar'     => 'Solare termico',
     'district'  => 'Teleriscaldamento',
+
+    // Condizione interna
+    "new"              => "Nuovo",
+    "renovated"        => "Ristrutturato",
+    "good"             => "Buono",
+    "excellent"        => "Eccellente",
+    "original"         => "Originale",
+    "fair"             => "Discreto",
+    "to_be_renovated"  => "Da ristrutturare",
+
+    // Arredamento
+    "furnished"            => "Arredato",
+    "partially-furnished"  => "Parzialmente arredato",
+    "unfurnished"          => "Non arredato"
+
 ];

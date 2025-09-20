@@ -112,4 +112,13 @@ class DashController extends Controller
 
         return redirect()->back()->withSuccess("Impostazioni modificate");
     }
+
+    public function showWebsite($agencyUuid, Request $request){
+        
+        $title = "Sito web";
+        $agency = Agency::where("uuid", $agencyUuid)->first();
+
+
+        return view("dash.website.show", compact("agency", "title"));
+    }
 }

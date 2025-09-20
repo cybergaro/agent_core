@@ -13,7 +13,7 @@
     <table class="mt-4 border-collapse rounded-3xl overflow-hidden">
         <tbody class="w-full bg-white">
             <?php foreach ($properties as $property) { ?>
-                <tr class="flex items-center px-5 py-5 hover:bg-gray-200 rounded-2xl cursor-pointer" onclick="window.location='/dashboard/property/<?= $property->uuid?>'">
+                <tr class="flex items-center px-5 py-5 hover:bg-gray-200 rounded-2xl cursor-pointer" onclick="window.location='/dashboard/<?=request()->route('agencyUuid')?>/property/<?= $property->uuid?>'">
                     <td>
                         <?php if($property->image_path){ ?>
                             <img src="/storage/properties_images/<?= $property->image_path?>" class="h-25 w-40 object-cover rounded-xl">

@@ -19,42 +19,9 @@ class PropertiesController extends Controller
 {
     public function newForm(){
 
-        $propertyTypes = [
-            'apartment',
-            'single-family-house',
-            'multi-family-house',
-            'townhouse',
-            'villa',
-            'loft',
-            'studio-apartment',
-            'penthouse',
-            'farmhouse',
-            'cottage',
-            'office',
-            'shop',
-            'commercial-space',
-            'hotel',
-            'restaurant',
-            'showroom',
-            'retail',
-            'bar',
-            'theater',
-            'industrial-warehouse',
-            'logistics-hub',
-            'workshop',
-            'agricultural-land',
-            'building-land',
-            'garage',
-            'parking-lot',
-            'storage-unit'
-        ];
-        
-        $heatingSystemManagment = ['autonomous', 'centralized', 'semi-centralized'];
-        $heatingSystemType = ['radiators', 'underfloor', 'wall', 'ceiling', 'fan_coil', 'stove', 'fireplace', 'heat_pump'];
-        $heatingSystemPower = ['gas', 'gpl', 'diesel', 'electric', 'pellet', 'wood', 'solar', 'district'];
+        $property = new Property;
 
-        $header = true;
-        return view("dash.properties.new.show", compact("header", "propertyTypes", "heatingSystemManagment", "heatingSystemType", "heatingSystemPower"));
+        return view("dash.properties.new.show", compact("property"));
     }
 
     public function new(Request $request){
@@ -104,5 +71,21 @@ class PropertiesController extends Controller
         dd($property);
         // $property->save();
 
+    }
+
+    public function showEdit($agencyUuid, $propertyUuid){
+
+        $property = Property::where("uuid", $propertyUuid)->first();
+        $agency = Agency::where("uuid", $agencyUuid)->first();
+
+        if(!$property){
+            return "Immobile non esistente";
+        }
+
+        if($property->id_agency != $agency->id){
+            return "Non sei autorizzato a modificare questo immobile";
+        }
+
+        return view("dash.properties.new.show", compact("property"));
     }
 }

@@ -66,5 +66,19 @@ return [
     'pellet'    => 'Pellet',
     'wood'      => 'Wood',
     'solar'     => 'Solar thermal',
-    'district'  => 'District heating'
+    'district'  => 'District heating',
+
+    // Condizione interna
+    "new"              => "New",
+    "renovated"        => "Renovated",
+    "good"             => "Good",
+    "excellent"        => "Excellent",
+    "original"         => "Original",
+    "fair"             => "Fair",
+    "to_be_renovated"  => "To be renovated",
+
+    // Arredamento
+    "furnished"            => "Furnished",
+    "partially-furnished"  => "Partially furnished",
+    "unfurnished"          => "Unfurnished"
 ];
