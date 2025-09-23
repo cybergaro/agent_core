@@ -121,4 +121,12 @@ class DashController extends Controller
 
         return view("dash.website.show", compact("agency", "title"));
     }
+
+    public function showWebsiteEmails($agencyUuid){
+        $title = "Richieste di valutazione";
+        $agency = Agency::where("uuid", $agencyUuid)->first();
+        
+        return view("dash.website.emails", compact("agency", "title"));
+        
+    }
 }

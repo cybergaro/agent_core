@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
+use App\Services\BrevoMailer;
+
 use App\Models\Agency;
 use App\Models\Property;
 use App\Models\PropertyImage;
@@ -106,6 +108,34 @@ class ApiController extends Controller
         $property["images360"] = $images360->pluck('image_url');
 
         return response()->json($property);
+
+    }
+
+    public function sendEvalutationEmail(Request $request){
+        if(!$request->uuid){
+            return response()->json([
+                "status" => 400,
+                "error" => "Insert agency uuid"
+            ]);
+        }
+
+        $agency = Agency::where("uuid", $request->uuid)->first();
+        
+        if(!$agency){
+            return response()->json([
+                "status" => 400,
+                "error" => "This agency does not exist"
+            ]);
+        }
+
+        if(!$agency->website_connection){
+            return response()->json([
+                "status" => 400,
+                "error" => "This agency is not enabled to use this method"
+            ]);
+        }
+
+
 
     }
 }

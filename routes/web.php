@@ -54,6 +54,7 @@ Route::prefix('dashboard')->group(function () {
         Route::get("/social", [SocialController::class, 'show'])->name("agency:social");
 
         Route::get("/website", [DashController::class, 'showWebsite'])->name("agency:website");
+        Route::get("/website/emails", [DashController::class, 'showWebsiteEmails'])->name("agency:website:emails");
 
         Route::get("/settings", [DashController::class, 'settings'])->name("agency:settings");
         Route::get("/settings/import", [DashController::class, 'settingsImport'])->name("agency:settings:import");

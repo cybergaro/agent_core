@@ -12,3 +12,5 @@ use App\Http\Controllers\ApiController;
 Route::get("/properties", [ApiController::class, 'propertySearch']);
 
 Route::get("/property/{uuid}", [ApiController::class, 'getSingleProperty']);
+
+Route::post("/child_website/evalutation_email", [ApiController::class, 'sendEvalutationEmail']);
