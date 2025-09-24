@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 use App\Services\BrevoMailer;
 
@@ -12,6 +13,7 @@ use App\Models\Agency;
 use App\Models\Property;
 use App\Models\PropertyImage;
 use App\Models\PropertyImage360;
+use App\Models\WebsiteEmail;
 
 class ApiController extends Controller
 {
@@ -112,14 +114,25 @@ class ApiController extends Controller
     }
 
     public function sendEvalutationEmail(Request $request){
-        if(!$request->uuid){
+
+        $validator = Validator::make($request->all(), [
+            'uuid_agency'   => 'required|uuid',
+            'name'        => 'nullable|string|max:255',
+            'tel'     => 'nullable|string|max:255',
+            'email'       => 'nullable|email|max:255',
+            'n_room'      => 'nullable|integer|min:1',
+            'size'        => 'nullable|numeric|min:0',
+            'address'     => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+        ]);
+
+        if ($validator->fails()) {
             return response()->json([
-                "status" => 400,
-                "error" => "Insert agency uuid"
-            ]);
+                'errors' => $validator->errors(),
+            ], 422);
         }
 
-        $agency = Agency::where("uuid", $request->uuid)->first();
+        $agency = Agency::where("uuid", $request->uuid_agency)->first();
         
         if(!$agency){
             return response()->json([
@@ -135,7 +148,35 @@ class ApiController extends Controller
             ]);
         }
 
+        $emailDb = new WebsiteEmail;
+        $emailDb->id_agency = $agency->id;
+        $emailDb->name = $request->name;
+        $emailDb->tel = $request->tel;
+        $emailDb->email = $request->email;
+        $emailDb->n_room = $request->n_room;
+        $emailDb->size = $request->size;
+        $emailDb->address = $request->address;
+        $emailDb->description = $request->description;
+        $emailDb->save();     
 
+        
+        $html = view('emails.childWebsite.evalutationRequest', [
+            'name' => $request->name,
+            'tel' => $request->tel,
+            'email' => $request->email,
+            'address' => $request->address,
+            'description' => $request->description,
+            'n_room' => $request->n_room,
+            'size' => $request->size,
+        ])->render();
 
+        $mailer = new BrevoMailer();
+
+        $mailer->sendCustomEmail(
+            $agency->email,
+            $agency->name,
+            'Nuova richiesta di valutazione',
+            $html
+        );
     }
 }

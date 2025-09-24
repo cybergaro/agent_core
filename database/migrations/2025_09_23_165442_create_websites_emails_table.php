@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('websites_emails', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_agency');
-            $table->string("name");
-            $table->string("surname");
+            $table->string("name")->nullable();
+            $table->string("tel")->nullable();
             $table->string("email")->nullable();
             $table->integer("n_room")->nullable();
             $table->integer("size")->nullable();
