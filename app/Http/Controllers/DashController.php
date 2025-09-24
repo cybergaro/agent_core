@@ -15,6 +15,7 @@ use App\Models\User;
 use App\Models\EmailVerifyToken;
 use App\Models\Agency;
 use App\Models\Property;
+use App\Models\WebsiteEmail;
 
 class DashController extends Controller
 {
@@ -125,8 +126,9 @@ class DashController extends Controller
     public function showWebsiteEmails($agencyUuid){
         $title = "Richieste di valutazione";
         $agency = Agency::where("uuid", $agencyUuid)->first();
-        
-        return view("dash.website.emails", compact("agency", "title"));
-        
+
+        $emails = WebsiteEmail::orderBy("id", "DESC")->get();
+
+        return view("dash.website.emails", compact("agency", "title", "emails"));
     }
 }
