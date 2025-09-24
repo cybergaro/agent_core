@@ -6,7 +6,7 @@
     <h1 class="font-inter font-semibold text-2xl">Social & Condivisione</h1>
 
     <!-- Facebook -->
-    <div class="flex flex-col bg-white rounded-2xl shadow-lg px-7 py-7 mt-5 w-150">
+    <div class="flex flex-col bg-white rounded-2xl px-7 py-7 mt-5 w-150">
         <h2 class="text-xl font-semibold mb-4">
             <i class="fa-brands fa-facebook text-blue-600"></i> Facebook
         </h2>
@@ -17,7 +17,7 @@
     </div>
 
     <!-- Instagram -->
-    <div class="flex flex-col bg-white rounded-2xl shadow-lg px-7 py-7 mt-5 w-150">
+    <div class="flex flex-col bg-white rounded-2xl px-7 py-7 mt-5 w-150">
         <h2 class="text-xl font-semibold mb-4">
             <i class="fa-brands fa-instagram"></i> Instagram
         </h2>
@@ -28,7 +28,7 @@
     </div>
 
     <!-- TikTok -->
-    <div class="flex flex-col bg-white rounded-2xl shadow-lg px-7 py-7 mt-5 w-150">
+    <div class="flex flex-col bg-white rounded-2xl px-7 py-7 mt-5 w-150">
         <h2 class="text-xl font-semibold mb-4">
             <i class="fa-brands fa-tiktok"></i> TikTok
         </h2>

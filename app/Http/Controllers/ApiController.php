@@ -32,6 +32,7 @@ class ApiController extends Controller
                 "properties.n_room",
                 "properties.n_bathroom",
                 "properties.green",
+                "properties.luxury",
                 DB::raw("CONCAT('" . env("APP_URL") .Storage::url('properties_images').'/'. "', properties_images.path) as image_url")
             );
         }else{

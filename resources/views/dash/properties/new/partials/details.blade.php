@@ -65,24 +65,49 @@
         <label class="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
             <input
                 type="checkbox"
+                name="terrace"
+                id="terrace"
+                <?= $property->terrace ? "checked" : "" ?>
+                class="h-5 w-5 text-indigo-600 border-gray-400 rounded-lg focus:ring-indigo-500 focus:ring-offset-2 transition duration-150 ease-in-out"
+            >
+            Terrazzo
+            <i class="fa-solid fa-sun text-yellow-400"></i>
+        </label>
+
+        <label class="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+            <input
+                type="checkbox"
                 name="independent"
                 id="independent"
                 <?= $property->independent ? "checked" : "" ?>
                 class="h-5 w-5 text-indigo-600 border-gray-400 rounded-lg focus:ring-indigo-500 focus:ring-offset-2 transition duration-150 ease-in-out"
             >
-            L'immobile è indipendente
+            Indipendente
+        </label>
+
+        <label class="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+            <input
+                type="checkbox"
+                name="green"
+                id="green"
+                <?= $property->eco ? "checked" : "" ?>
+                class="h-5 w-5 text-indigo-600 border-gray-400 rounded-lg focus:ring-indigo-500 focus:ring-offset-2 transition duration-150 ease-in-out"
+            >
+            ECO sostenibile
+            <i class="fa-solid fa-leaf text-green-600"></i>
+        </label>
+
+        <label class="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+            <input
+                type="checkbox"
+                name="luxury"
+                id="luxury"
+                <?= $property->luxury ? "checked" : "" ?>
+                class="h-5 w-5 text-indigo-600 border-gray-400 rounded-lg focus:ring-indigo-500 focus:ring-offset-2 transition duration-150 ease-in-out"
+            >
+            Lusso
+            <i class="fa-regular fa-gem text-blue-700"></i>
         </label>
     </div>
 
-    <label class="flex items-center gap-2 text-sm text-gray-700 cursor-pointer mt-5">
-    <input
-        type="checkbox"
-        name="green"
-        id="green"
-        <?= $property->eco ? "checked" : "" ?>
-        class="h-5 w-5 text-indigo-600 border-gray-400 rounded-lg focus:ring-indigo-500 focus:ring-offset-2 transition duration-150 ease-in-out"
-    >
-        Immobile contrassegnato come ECO sostenibile
-        <i class="fa-solid fa-leaf text-green-600"></i>
-    </label>
 </div>

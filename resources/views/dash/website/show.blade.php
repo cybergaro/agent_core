@@ -13,7 +13,7 @@
 <?php }else{ ?>
 
 <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 p-10">
-    <a href="/dashboard/<?= $agency->uuid ?>/website/emails" class="group block rounded-2xl bg-white p-6 shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+    <a href="/dashboard/<?= $agency->uuid ?>/website/emails" class="group block rounded-2xl bg-white p-6 transform transition-all duration-200 hover:outline-none hover:ring-2 hover:ring-offset-2 hover:ring-indigo-500">
         <div class="flex items-start gap-4">
             <div class="flex-shrink-0">
                 <div class="h-14 w-14 rounded-lg bg-indigo-50 flex items-center justify-center group-hover:bg-indigo-100 transition">

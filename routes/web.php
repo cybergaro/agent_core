@@ -9,6 +9,7 @@ use App\Http\Controllers\AgencyController;
 use App\Http\Controllers\CronController;
 use App\Http\Controllers\PropertiesController;
 use App\Http\Controllers\SocialController;
+use App\Http\Controllers\ConstructionSiteController;
 
 Route::get("/", function (){
     return redirect()->route("login");
@@ -51,6 +52,9 @@ Route::prefix('dashboard')->group(function () {
         Route::post("/property/new", [PropertiesController::class, 'new']);
         Route::get("/property/{propertyUuid}", [PropertiesController::class, 'showEdit']);
         
+        Route::get("/construction_sites", [DashController::class, 'getConstructionSite'])->name("agency:construction");
+        Route::get("/construction_site/new", [ConstructionSiteController::class, 'showNew']);
+
         Route::get("/social", [SocialController::class, 'show'])->name("agency:social");
 
         Route::get("/website", [DashController::class, 'showWebsite'])->name("agency:website");

@@ -4,7 +4,7 @@
 <?php $uuid = request()->route('agencyUuid'); ?>
 
 <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 p-10">
-    <a href="/dashboard/<?= $uuid ?>/settings/import" class="group block rounded-2xl bg-white p-6 shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+    <a href="/dashboard/<?= $uuid ?>/settings/import" class="group block rounded-2xl bg-white p-6 transform transition-all duration-200 hover:outline-none hover:ring-2 hover:ring-offset-2 hover:ring-indigo-500">
         <div class="flex items-start gap-4">
             <div class="flex-shrink-0">
                 <div class="h-14 w-14 rounded-lg bg-indigo-50 flex items-center justify-center group-hover:bg-indigo-100 transition">
@@ -19,7 +19,7 @@
         </div>
     </a>
 
-    <a href="/dashboard/<?= $uuid ?>/settings/agency" class="group block rounded-2xl bg-white p-6 shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">
+    <a href="/dashboard/<?= $uuid ?>/settings/agency" class="group block rounded-2xl bg-white p-6 transform transition-all duration-200 hover:outline-none hover:ring-2 hover:ring-offset-2 hover:ring-yellow-500">
         <div class="flex items-start gap-4">
             <div class="flex-shrink-0">
                 <div class="h-14 w-14 rounded-lg bg-yellow-100 flex items-center justify-center group-hover:bg-yellow-200 transition">
@@ -34,7 +34,7 @@
         </div>
     </a>
 
-    <a href="/dashboard/user" class="group block rounded-2xl bg-white p-6 shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+    <a href="/dashboard/user" class="group block rounded-2xl bg-white p-6 transform transition-all duration-200 hover:outline-none hover:ring-2 hover:ring-offset-2 hover:ring-red-500">
         <div class="flex items-start gap-4">
             <div class="flex-shrink-0">
                 <div class="h-14 w-14 rounded-lg bg-red-100 flex items-center justify-center group-hover:bg-red-200 transition">
@@ -49,7 +49,7 @@
         </div>
     </a>
 
-    <a href="/dashboard/user/password" class="group block rounded-2xl bg-white p-6 shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+    <a href="/dashboard/user/password" class="group block rounded-2xl bg-white p-6 transform transition-all duration-200 hover:outline-none hover:ring-2 hover:ring-offset-2 hover:ring-green-500">
         <div class="flex items-start gap-4">
             <div class="flex-shrink-0">
                 <div class="h-14 w-14 rounded-lg bg-green-100 flex items-center justify-center group-hover:bg-green-200 transition">

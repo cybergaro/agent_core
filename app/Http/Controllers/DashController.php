@@ -71,6 +71,15 @@ class DashController extends Controller
         return view("dash.properties.list", compact("properties", "title"));
     }
 
+    public function getConstructionSite($agencyUuid){
+        $agency = Agency::where("uuid", $agencyUuid)->first();
+
+        $constructionSites = [];
+        $title = "Immobili";
+        
+        return view("dash.constructionSites.list", compact("constructionSites", "title"));
+    }
+
     public function settings($agencyUuid){
         return view("dash.agency.settings.show");
     }   

@@ -48,7 +48,7 @@
                             <i class="fa-solid fa-shop"></i> <span>Immobili</span>
                         </a>
 
-                        <a href="/dashboard/<?= $uuid ?>/properties" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-blue-100 hover:text-blue-700 transition">
+                        <a href="/dashboard/<?= $uuid ?>/construction_sites" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-blue-100 hover:text-blue-700 transition">
                             <i class="fa-solid fa-person-digging"></i> <span>Cantieri</span>
                         </a>
 

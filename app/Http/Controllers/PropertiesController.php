@@ -56,6 +56,8 @@ class PropertiesController extends Controller
         $property->garden =                     $request->has("garden");
         $property->independent =                $request->has("independent");
         $property->green =                      $request->has("green");
+        $property->terrace =                    $request->has("terrace");
+        $property->luxury =                     $request->has("luxury");
 
         // consumi
         $property->ape =                        $request->input("ape");
