@@ -75,7 +75,7 @@ class DashController extends Controller
         $agency = Agency::where("uuid", $agencyUuid)->first();
 
         $constructionSites = [];
-        $title = "Immobili";
+        $title = "Cantieri";
         
         return view("dash.constructionSites.list", compact("constructionSites", "title"));
     }

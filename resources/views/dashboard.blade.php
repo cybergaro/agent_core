@@ -21,6 +21,17 @@
     @yield('after_head')
 
 </head>
+<?php 
+$options = [
+    ["name" => "Home", "path" => "", "icon" => "fa-solid fa-home"],
+    ["name" => "Immobili", "path" => "properties", "icon" => "fa-solid fa-shop"],
+    ["name" => "Cantieri", "path" => "construction_sites", "icon" => "fa-solid fa-person-digging"],
+    ["name" => "Sito web", "path" => "website", "icon" => "fa-solid fa-globe"],
+    ["name" => "Social & Condivisione", "path" => "social", "icon" => "fa-solid fa-share-nodes"],
+    ["name" => "Impostazioni", "path" => "settings", "icon" => "fa-solid fa-gear"],
+
+];
+?>
 
 <body class="overflow-hidden">
     <div class="flex h-screen bg-gray-100 font-sans">
@@ -39,30 +50,11 @@
 
                     <!-- Menu -->
                     <nav class="flex-1 px-4 py-5 space-y-1 bg-white rounded-3xl">
-                        
-                        <a href="/dashboard/<?= $uuid ?>" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-blue-100 hover:text-blue-700 transition">
-                            <i class="fa-solid fa-home"></i> <span>Home</span>
-                        </a>
-
-                        <a href="/dashboard/<?= $uuid ?>/properties" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-blue-100 hover:text-blue-700 transition">
-                            <i class="fa-solid fa-shop"></i> <span>Immobili</span>
-                        </a>
-
-                        <a href="/dashboard/<?= $uuid ?>/construction_sites" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-blue-100 hover:text-blue-700 transition">
-                            <i class="fa-solid fa-person-digging"></i> <span>Cantieri</span>
-                        </a>
-
-                        <a href="/dashboard/<?= $uuid ?>/website" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-blue-100 hover:text-blue-700 transition">
-                            <i class="fa-solid fa-globe"></i> <span>Sito web</span>
-                        </a>
-
-                        <a href="/dashboard/<?= $uuid ?>/social" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-blue-100 hover:text-blue-700 transition">
-                            <i class="fa-solid fa-share-nodes"></i> <span>Social & Condivisione</span>
-                        </a>
-
-                        <a href="/dashboard/<?= $uuid ?>/settings" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-blue-100 hover:text-blue-700 transition">
-                            <i class="fa-solid fa-gear"></i> <span>Impostazioni</span>
-                        </a>
+                        <?php foreach ($options as $option) { ?>
+                            <a href="/dashboard/<?= $uuid ?>/<?= $option["path"]?>" class="flex items-center gap-2 px-3 py-2 rounded-xl transition hover:outline-none hover:ring-2 hover:ring-offset-2 hover:ring-indigo-500">
+                                <i class="<?= $option["icon"]?>"></i> <span><?= $option["name"]?></span>
+                            </a>
+                        <?php }?>
                     </nav>
 
                     <!-- Logout in basso -->
