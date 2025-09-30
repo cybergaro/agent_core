@@ -64,7 +64,7 @@ class DashController extends Controller
                 }
             )
             ->orderBy("id", "DESC")
-            ->get();
+            ->paginate(10);
 
         $title = "Immobili";
         
