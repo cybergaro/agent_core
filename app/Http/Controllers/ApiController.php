@@ -72,7 +72,7 @@ class ApiController extends Controller
             $query->whereIn("category", $request->categories);
         }
 
-        $radius = 2; // raggio di ricerca in (Km)
+        $radius = 4; // raggio di ricerca in (Km)
 
         if($request->lat && $request->lng){
             $query->whereRaw("(6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) <= ?", 
