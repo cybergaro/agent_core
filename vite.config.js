@@ -14,5 +14,6 @@ export default defineConfig({
         host: true,
         port: 5173,
         allowedHosts: ['agentcore.francescogarofolo.com'],
+        origin: 'https://agentcore.francescogarofolo.com/vite'
     },
 });
