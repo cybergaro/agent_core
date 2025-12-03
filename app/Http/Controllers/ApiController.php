@@ -33,6 +33,8 @@ class ApiController extends Controller
                 "properties.n_bathroom",
                 "properties.green",
                 "properties.luxury",
+                "properties.latitude",  
+                "properties.longitude",
                 DB::raw("CONCAT('" . env("APP_URL") .Storage::url('properties_images').'/'. "', properties_images.path) as image_url")
             );
         }else{
@@ -72,16 +74,29 @@ class ApiController extends Controller
             $query->whereIn("category", $request->categories);
         }
 
-        $radius = 1; // raggio di ricerca in (Km)
-
-        if($request->lat && $request->lng){
-            $query->whereRaw("(6371 * acos(cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) <= ?", 
-                [$request->lat, $request->lng, $request->lat, $radius]);
-        }
-
         if($request->similarTo){
             $query->where("uuid", "!=", $request->similarTo);
         }
+
+        // GEOLOCALIZZAZIONE E ORDINAMENTO
+    
+        $radius = 1; // Km
+
+        if($request->lat && $request->lng){
+            $lat = (float) $request->lat;
+            $lng = (float) $request->lng;
+
+            $haversine = "(6371 * acos(cos(radians($lat)) * cos(radians(latitude)) * cos(radians(longitude) - radians($lng)) + sin(radians($lat)) * sin(radians(latitude))))";
+
+            $query->addSelect(DB::raw("$haversine AS distance"));
+
+            $query->whereRaw("$haversine <= ?", [$radius]);
+
+            $query->orderBy('distance', 'ASC');
+        } else {
+            $query->orderBy("properties.id", "DESC");
+        }
+
 
         $properties = $query->orderBy("properties.id", "DESC")
             ->paginate($request->limit && $request->limit < 30 ? $request->limit : 30);
