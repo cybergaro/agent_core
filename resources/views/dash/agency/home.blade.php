@@ -1,7 +1,7 @@
 @extends('dashboard')
 
 @section('content')
-<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 py-5">
+<div class="grid gap-6 grid-cols-2 py-5">
     <div class="bg-white rounded-3xl flex flex-col items-center p-5">
         <div class="relative w-[200px] h-[200px] flex items-center justify-center">
             <svg
