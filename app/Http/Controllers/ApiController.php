@@ -13,6 +13,7 @@ use App\Models\Agency;
 use App\Models\Property;
 use App\Models\PropertyImage;
 use App\Models\PropertyImage360;
+use App\Models\PropertyFloorPlan;
 use App\Models\WebsiteEmail;
 
 class ApiController extends Controller
@@ -124,6 +125,11 @@ class ApiController extends Controller
 
         $property["images"] = $images->pluck('image_url');
         $property["images360"] = $images360->pluck('image_url');
+
+        $properties["floors"] = array();
+        $properties["floors"][]["plans"] = PropertyFloorPlan::select(
+            DB::raw("CONCAT('" . env("APP_URL") .Storage::url('properties_floor_plans').'/'. "', properties_floor_plans.path) as image_url")
+        )->where("id_property", $property->id)->get();;
 
         return response()->json($property);
 
