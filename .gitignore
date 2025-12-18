@@ -17,3 +17,15 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+app/.DS_Store
+app/Http/.DS_Store
+.gitignore
+database/.DS_Store
+resources/.DS_Store
+resources/lang/.DS_Store
+resources/views/.DS_Store
+resources/views/dash/agency/.DS_Store
+storage/.DS_Store
+storage/framework/.DS_Store
+tests/.DS_Store
+.DS_Store

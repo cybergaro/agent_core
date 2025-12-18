@@ -126,10 +126,12 @@ class ApiController extends Controller
         $property["images"] = $images->pluck('image_url');
         $property["images360"] = $images360->pluck('image_url');
 
-        $properties["floors"] = array();
-        $properties["floors"][]["plans"] = PropertyFloorPlan::select(
+        $floorPlans = PropertyFloorPlan::select(
             DB::raw("CONCAT('" . env("APP_URL") .Storage::url('properties_floor_plans').'/'. "', properties_floor_plans.path) as image_url")
         )->where("id_property", $property->id)->get();;
+            
+        $properties["floors"] = array();
+        $properties["floors"][]["plans"] = $floorPlans->pluck("image_url");
 
         return response()->json($property);
 
