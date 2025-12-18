@@ -130,8 +130,8 @@ class ApiController extends Controller
             DB::raw("CONCAT('" . env("APP_URL") .Storage::url('properties_floor_plans').'/'. "', properties_floor_plans.path) as image_url")
         )->where("id_property", $property->id)->get();;
             
-        $properties["floors"] = array();
-        $properties["floors"][]["plans"] = $floorPlans->pluck("image_url");
+        $property["floors"] = array();
+        $property["floors"][]["plans"] = $floorPlans->pluck("image_url");
 
         return response()->json($property);
 
