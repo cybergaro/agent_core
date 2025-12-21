@@ -1,6 +1,6 @@
 # Agent Core - Laravel Real Estate Management System
 
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<p align="center"><img src="public/img/logoBlu.png" width="150" alt="Agent Core Logo"></p>
 
 ## Descrizione del Progetto
 
@@ -39,9 +39,3 @@ Il progetto richiede le seguenti dipendenze:
 - **Laravel**: ^10.10
 - **Database**: MySQL/MariaDB
 - **Servizi Esterni**: Brevo (ex Sendinblue) per l'invio transazionale di email (`getbrevo/brevo-php`).
-
-## Installazione
-
-1. **Clona il repository**
-   ```bash
-   git clone [url-del-tuo-repo]
