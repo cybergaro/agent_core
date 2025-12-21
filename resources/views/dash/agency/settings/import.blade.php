@@ -4,7 +4,7 @@
 <?php $uuid = request()->route('agencyUuid'); ?>
 
 <form method="POST" action="/dashboard/<?= $uuid ?>/settings/import" class="p-10">
-    <div class="flex flex-col w-full bg-white rounded-2xl shadow-lg px-7 py-7">
+    <div class="flex flex-col w-full bg-white rounded-2xl px-7 py-7">
         @csrf
 
         <h1 class="font-inter font-semibold text-2xl">RealSmart</h1>
