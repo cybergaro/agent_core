@@ -273,4 +273,86 @@ class ApiController extends Controller
             $html
         );
     }
+
+    public function sendMessage(Request $request){
+        // Ottieni le credenziali su Google Cloud:
+        // Crea un progetto sulla Google Cloud Console.
+        // Abilita la Google Sheets API.
+        // Crea un Account di servizio e scarica la chiave nel formato JSON (rinominala credentials.json).
+        // Autorizza lo script: Apri il tuo Google Sheet e condividilo (assegnando il ruolo di "Editor") con l'indirizzo email speciale che trovi dentro il file JSON (alla voce client_email).
+
+
+        $validator = Validator::make($request->all(), [
+            'uuid_agency'   => 'required|uuid',
+            'name'        => 'nullable|string|max:255',
+            'tel'     => 'nullable|string|max:255',
+            'email'       => 'nullable|email|max:255',
+            'text' => 'nullable|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $agency = Agency::where("uuid", $request->uuid_agency)->first();
+        
+        if(!$agency){
+            return response()->json([
+                "status" => 400,
+                "error" => "This agency does not exist"
+            ]);
+        }
+
+        // condivido su google sheet
+        if($agency->google_cloud_credentials && $agency->google_sheet_id){
+
+            $credentialsArray = json_decode($agency->google_cloud_credentials, true);
+
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                die("Errore nella decodifica del JSON: " . json_last_error_msg());
+            }
+
+            $client = new \Google_Client();
+            $client->setApplicationName('Integrazione PHP - Google Fogli');
+            $client->setScopes([\Google_Service_Sheets::SPREADSHEETS]);
+            $client->setAccessType('offline');
+
+            $client->setAuthConfig($credentialsArray);
+
+            $service = new \Google_Service_Sheets($client);
+
+            $range = 'Foglio1!A:D'; 
+
+            $values = [[
+                $request->name, 
+                $request->email,
+                $request->tel,
+                $request->text
+            ]];
+
+            $body = new \Google_Service_Sheets_ValueRange([
+                'values' => $values
+            ]);
+
+            $params = [
+                'valueInputOption' => 'USER_ENTERED' 
+            ];
+
+            try {
+                $result = $service->spreadsheets_values->append(
+                    $agency->google_sheet_id, 
+                    $range, 
+                    $body, 
+                    $params
+                );
+                
+                echo "Operazione completata: " . $result->getUpdates()->getUpdatedCells() . " celle aggiornate.\n";
+            } catch (Exception $e) {
+                echo "Errore durante la scrittura sul foglio: " . $e->getMessage() . "\n";
+            }
+
+        }
+    }
 }

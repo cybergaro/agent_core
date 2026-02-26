@@ -4,7 +4,7 @@
 
 <div class="p-8">
     <div class="flex items-center">
-        <h1 class="font-semibold text-2xl">Richieste di valutazione</h1>
+        <h1 class="font-semibold text-2xl">Messaggi</h1>
     </div>
 
     <div class="mt-6 overflow-hidden rounded-3xl bg-white">

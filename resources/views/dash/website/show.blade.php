@@ -22,8 +22,8 @@
             </div>
 
             <div>
-                <h3 class="text-lg font-semibold text-gray-900">Richieste di valutazione</h3>
-                <p class="mt-1 text-sm text-gray-600">Visualizza le richieste di valutazione che sono state inoltrate alla tua email dal sito</p>
+                <h3 class="text-lg font-semibold text-gray-900">Messaggi</h3>
+                <p class="mt-1 text-sm text-gray-600">Visualizza i messaggi che sono stati inviati dagli utenti attraverso il sito web</p>
             </div>
         </div>
     </a>

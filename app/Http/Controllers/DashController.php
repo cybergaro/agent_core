@@ -75,7 +75,10 @@ class DashController extends Controller
     public function getConstructionSite($agencyUuid){
         $agency = Agency::where("uuid", $agencyUuid)->first();
 
-        $sites = ConstructionSite::where("id_agency", $agency->id)->get();
+        $sites = ConstructionSite::where("id_agency", $agency->id)
+            ->orderBy("id", "DESC")
+            ->paginate(10);
+
         $title = "Cantieri";
         
         return view("dash.constructionSites.list", compact("sites", "title"));
@@ -100,6 +103,26 @@ class DashController extends Controller
         $agency->real_smart_xml_url = $request->input("real_smart_xml_url");
         $agency->enable_real_smart_importer = $request->has("enable_real_smart_importer");
         $agency->real_smart_remove_after_delete = $request->has("real_smart_remove_after_delete");
+
+        $agency->save();
+
+        return redirect()->back()->withSuccess("Impostazioni modificate");
+    }   
+
+    public function settingsExport($agencyUuid){
+        $agency = Agency::where("uuid", $agencyUuid)->first();
+        
+        $title = "Impostazioni esportazione";
+
+        return view("dash.agency.settings.export", compact("agency", "title"));
+    }
+
+    public function saveSettingsExport($agencyUuid, Request $request){
+
+        $agency = Agency::where("uuid", $agencyUuid)->first();
+        
+        $agency->google_cloud_credentials = $request->input("google_cloud_credentials");
+        $agency->google_sheet_id = $request->input("google_sheet_id");
 
         $agency->save();
 
@@ -134,7 +157,7 @@ class DashController extends Controller
     }
 
     public function showWebsiteEmails($agencyUuid){
-        $title = "Richieste di valutazione";
+        $title = "Messaggi";
         $agency = Agency::where("uuid", $agencyUuid)->first();
 
         $emails = WebsiteEmail::orderBy("id", "DESC")->get();
