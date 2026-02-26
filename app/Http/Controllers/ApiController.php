@@ -305,6 +305,22 @@ class ApiController extends Controller
             ]);
         }
 
+        $html = view('emails.childWebsite.message', [
+            'name' => $request->name,
+            'tel' => $request->tel,
+            'email' => $request->email,
+            'message' => $request->text,
+        ])->render();
+
+        $mailer = new BrevoMailer();
+
+        $mailer->sendCustomEmail(
+            $agency->email,
+            $agency->name,
+            'Nuova Messaggio dal sito web',
+            $html
+        );
+
         // condivido su google sheet
         if($agency->google_cloud_credentials && $agency->google_sheet_id){
 
