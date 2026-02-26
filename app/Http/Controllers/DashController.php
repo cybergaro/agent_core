@@ -13,6 +13,7 @@ use App\Services\BrevoMailer;
 
 use App\Models\User;
 use App\Models\EmailVerifyToken;
+use App\Models\ConstructionSite;
 use App\Models\Agency;
 use App\Models\Property;
 use App\Models\WebsiteEmail;
@@ -74,10 +75,10 @@ class DashController extends Controller
     public function getConstructionSite($agencyUuid){
         $agency = Agency::where("uuid", $agencyUuid)->first();
 
-        $constructionSites = [];
+        $sites = ConstructionSite::where("id_agency", $agency->id)->get();
         $title = "Cantieri";
         
-        return view("dash.constructionSites.list", compact("constructionSites", "title"));
+        return view("dash.constructionSites.list", compact("sites", "title"));
     }
 
     public function settings($agencyUuid){

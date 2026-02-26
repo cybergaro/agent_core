@@ -23,9 +23,6 @@ return new class extends Migration
             $table->string("name");
             $table->text("description");
 
-            $table->date("start_date")->nullable();
-            $table->date("completion_date")->nullable();
-
             // Posizione
             $table->string('zip_code', 10);
             $table->string('country', 255);
@@ -48,51 +45,20 @@ return new class extends Migration
 
         Schema::create('construction_site_units', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_construction_sites');
+            $table->uuid('uuid')->unique();
+            $table->unsignedBigInteger('id_construction_site');
 
             // Dati dell'unità
             $table->string("name");
+            $table->text("description");
             $table->decimal('price', 15, 2)->nullable();
             $table->integer('size')->nullable();
 
-            $table->enum('type', ['residential', 'commercial', 'industrial'])->default('residential');
-            $table->enum('category', [
-                // Residenziale
-                'apartment',                 // Appartamento in condominio
-                'single-family-house',       // Casa unifamiliare
-                'multi-family-house',        // Casa plurifamiliare (es. bifamiliare, trifamiliare)
-                'townhouse',                 // Villetta a schiera
-                'villa',                     // Villa indipendente o a schiera
-                'loft',                      // Loft, solitamente da recupero industriale
-                'studio-apartment',          // Monolocale
-                'penthouse',                 // Attico
-                'farmhouse',                 // Casale o rustico
-                'cottage',                   // Casetta o villino
+            // Dati relativi all'avanzamento del cantiere
+            $table->date("start_date")->nullable();
+            $table->date("completion_date")->nullable();
 
-                // Commerciale e direzionale
-                'office',                    // Ufficio o studio
-                'shop',                      // Negozio con vetrina
-                'commercial-space',          // Locale commerciale generico
-                'hotel',                     // Albergo o struttura ricettiva
-                'restaurant',                // Ristorante
-                'showroom',                  // Spazio espositivo
-                'retail',                    // Spazio per la vendita al dettaglio
-                'bar',                       // Bar o pub
-                'theater',                   // Teatro o cinema
-
-                // Industriale e logistica
-                'industrial-warehouse',      // Capannone industriale
-                'logistics-hub',             // Polo logistico
-                'workshop',                  // Laboratorio artigianale o officina
-
-                // Terreni e altro
-                'agricultural-land',         // Terreno agricolo
-                'building-land',             // Terreno edificabile
-                'garage',                    // Garage o box auto
-                'parking-lot',               // Parcheggio
-                'storage-unit'               // Unità di deposito
-            ])->default('apartment')->nullable();
-
+            
             // Numeri stanze
             $table->smallInteger('n_floors')->nullable()->comment("Quanti piani ha l'immobile");
             $table->integer('n_room')->nullable();
@@ -100,9 +66,9 @@ return new class extends Migration
 
             // Energia
             $table->string('ape', 5)->nullable();
-            $table->string('heating_system_management', 20)->nullable();
-            $table->string('heating_system_type', 20)->nullable();
-            $table->string('heating_system_power', 20)->nullable();
+            $table->string('heating_system_management', 50)->nullable();
+            $table->string('heating_system_type', 50)->nullable();
+            $table->string('heating_system_power', 50)->nullable();
 
             // Altri dati
             $table->boolean('parking')->default(false);
@@ -118,17 +84,19 @@ return new class extends Migration
             // Timestamps
             $table->timestamps();
 
-            $table->foreign('id_construction_sites')->references('id')->on('construction_sites')->onDelete('cascade');
+            $table->foreign('id_construction_site')->references('id')->on('construction_sites')->onDelete('cascade');
         });
 
         Schema::create('construction_site_images', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_construction_site_unit');
+            $table->unsignedBigInteger('id_construction_site');
+            $table->unsignedBigInteger('id_construction_site_unit')->nullable();
             $table->string('path');
             
             $table->timestamp("created_at");
 
-            $table->foreign('id_construction_site_unit')->references('id')->on('construction_site_units')->onDelete('cascade');
+            $table->foreign('id_construction_site')->references('id')->on('construction_sites')->onDelete('cascade');
+            $table->foreign('id_construction_site_unit')->references('id')->on('construction_site_units')->onDelete('set null');
         });
     }
 
@@ -137,6 +105,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('construction_site_units_images');
         Schema::dropIfExists('construction_site_images');
         Schema::dropIfExists('construction_site_units');
         Schema::dropIfExists('construction_sites');

@@ -167,7 +167,7 @@ class AuthController extends Controller
 
         $result = $response->json();
 
-        if (isset($result['success']) && $result['success'] === true) {
+        if ((isset($result['success']) && $result['success'] === true) || !env("RECAPTCHA_ENABLE")) {
             // Utente umano
         } else {
             return back()->withErrors(['captcha' => 'Verifica reCAPTCHA fallita, riprova.']);

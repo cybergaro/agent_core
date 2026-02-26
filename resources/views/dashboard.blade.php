@@ -27,7 +27,7 @@ $options = [
     ["name" => "Immobili", "path" => "properties", "icon" => "fa-solid fa-shop"],
     ["name" => "Cantieri", "path" => "construction_sites", "icon" => "fa-solid fa-person-digging"],
     ["name" => "Sito web", "path" => "website", "icon" => "fa-solid fa-globe"],
-    ["name" => "Social & Condivisione", "path" => "social", "icon" => "fa-solid fa-share-nodes"],
+    // ["name" => "Social & Condivisione", "path" => "social", "icon" => "fa-solid fa-share-nodes"],
     ["name" => "Impostazioni", "path" => "settings", "icon" => "fa-solid fa-gear"],
 
 ];

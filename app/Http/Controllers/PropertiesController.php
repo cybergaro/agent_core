@@ -24,9 +24,7 @@ class PropertiesController extends Controller
         return view("dash.properties.new.show", compact("property"));
     }
 
-    public function new(Request $request){
-        $property = new Property();
-        
+    private function updateData($request, $property){
         // generali
         $property->name =                       $request->input("name");
         $property->description =                $request->input("description");
@@ -69,9 +67,19 @@ class PropertiesController extends Controller
         $property->occupancy_status =           $request->input("occupancy_status");
         $property->internal_condition =         $request->input("internal_condition");
         $property->furniture =                  $request->input("furniture");
+    }
 
-        dd($property);
-        // $property->save();
+    public function new(Request $request, $agencyUuid){
+        $agency = Agency::where("uuid", $agencyUuid)->first();
+
+        $property = new Property();
+        $property->id_agency = $agency->id;
+    
+        $this->updateData($request, $property);
+
+        // dd($property);
+
+        $property->save();
 
     }
 

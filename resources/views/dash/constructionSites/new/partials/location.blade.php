@@ -24,7 +24,7 @@
         <input 
             name="address" 
             id="address"
-            value="<?= $property->address ?>"
+            value="<?= $construction->address ?>"
             class="mt-1 border border-gray-300 rounded-lg outline-none px-4 py-3 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
         />
     </div>
@@ -35,7 +35,7 @@
             <input 
                 name="city" 
                 id="city"
-                value="<?= $property->city ?>"
+                value="<?= $construction->city ?>"
                 class="mt-1 border border-gray-300 rounded-lg outline-none px-4 py-3 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
             />
         </div>
@@ -45,7 +45,7 @@
             <input 
                 name="province" 
                 id="province"
-                value="<?= $property->province ?>"
+                value="<?= $construction->province ?>"
                 class="mt-1 border border-gray-300 rounded-lg outline-none px-4 py-3 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
             />
         </div>
@@ -57,7 +57,7 @@
             <input 
                 name="area" 
                 id="area"
-                value="<?= $property->area ?>"
+                value="<?= $construction->area ?>"
                 class="mt-1 border border-gray-300 rounded-lg outline-none px-4 py-3 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
             />
         </div>
@@ -66,7 +66,7 @@
             <input 
                 name="zip_code" 
                 id="zip_code"
-                value="<?= $property->zip_code ?>"
+                value="<?= $construction->zip_code ?>"
                 class="mt-1 border border-gray-300 rounded-lg outline-none px-4 py-3 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
             />
         </div>
@@ -79,7 +79,7 @@
                 readonly
                 name="lat" 
                 id="lat"
-                value="<?= $property->latitude ?>"
+                value="<?= $construction->latitude ?>"
                 class="mt-1 border border-gray-300 bg-gray-100 rounded-lg outline-none px-4 py-3 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
             />
         </div>
@@ -89,7 +89,7 @@
                 readonly
                 name="lng" 
                 id="lng"
-                value="<?= $property->longitude ?>"
+                value="<?= $construction->longitude ?>"
                 class="mt-1 border border-gray-300 bg-gray-100 rounded-lg outline-none px-4 py-3 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
             />
         </div>
@@ -107,19 +107,19 @@
     function initMap() {
         // Inizializza la mappa
         map = new google.maps.Map(document.getElementById("map"), {
-            <?php if($property->latitude && $property->longitude) {?>
+            <?php if($construction->latitude && $construction->longitude) {?>
                 zoom: 15,
-                center: { lat: <?= $property->latitude?>, lng: <?= $property->longitude?> },
+                center: { lat: <?= $construction->latitude?>, lng: <?= $construction->longitude?> },
             <?php }else{?>
                 zoom: 6,
                 center: { lat: 41.9028, lng: 12.4964 },
             <?php }?>
         });
 
-        <?php if($property->latitude && $property->longitude) {?>
+        <?php if($construction->latitude && $construction->longitude) {?>
             new google.maps.Marker({
                 map: map,
-                position: { lat: <?= $property->latitude?>, lng: <?= $property->longitude?> }
+                position: { lat: <?= $construction->latitude?>, lng: <?= $construction->longitude?> }
             });
         <?php }?>
 

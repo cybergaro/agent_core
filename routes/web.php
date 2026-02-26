@@ -54,6 +54,16 @@ Route::prefix('dashboard')->group(function () {
         
         Route::get("/construction_sites", [DashController::class, 'getConstructionSite'])->name("agency:construction");
         Route::get("/construction_site/new", [ConstructionSiteController::class, 'showNew']);
+        Route::post("/construction_site/new", [ConstructionSiteController::class, 'new']);
+        Route::get("/construction_site/{siteUuid}", [ConstructionSiteController::class, 'showEdit']);
+        Route::post("/construction_site/{siteUuid}", [ConstructionSiteController::class, 'edit']);
+        Route::get("/construction_site/{siteUuid}/delete", [ConstructionSiteController::class, 'delete']);
+        Route::get("/construction_site/{siteUuid}/units", [ConstructionSiteController::class, 'showUnits'])->name("site:units");
+        Route::get("/construction_site/{siteUuid}/unit/new", [ConstructionSiteController::class, 'showNewUnit'])->name("site:unit:new");
+        Route::post("/construction_site/{siteUuid}/unit/new", [ConstructionSiteController::class, 'newUnit']);
+        Route::get("/construction_site/{siteUuid}/unit/{uuidUnit}", [ConstructionSiteController::class, 'showEditUnit'])->name("site:unit:edit");
+        Route::post("/construction_site/{siteUuid}/unit/{uuidUnit}", [ConstructionSiteController::class, 'editUnit']);
+        Route::get("/construction_site/{siteUuid}/unit/{uuidUnit}/delete", [ConstructionSiteController::class, 'deleteUnit']);
 
         Route::get("/social", [SocialController::class, 'show'])->name("agency:social");
 
@@ -71,6 +81,9 @@ Route::prefix('dashboard')->group(function () {
 
 });
 
+
+// test
+Route::get("/test/facebook", [SocialController::class, 'test']);
 
 // Croon
 Route::get("/properties_import", [CronController::class, 'propertiesImport']);

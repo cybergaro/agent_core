@@ -15,6 +15,7 @@ use App\Models\PropertyImage;
 use App\Models\PropertyImage360;
 use App\Models\PropertyFloorPlan;
 use App\Models\WebsiteEmail;
+use App\Models\ConstructionSite;
 
 class ApiController extends Controller
 {
@@ -137,6 +138,43 @@ class ApiController extends Controller
         ];
 
         return response()->json($property);
+
+    }
+
+    public function constructionSites(Request $request){
+        $validator = Validator::make($request->all(), [
+            'uuid_agency'   => 'required|uuid'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $agency = Agency::where("uuid", $request->uuid_agency)->first();
+
+        if(!$agency){
+            return response()->json([
+                'error' => "agency not exist"
+            ]);
+        }
+
+        if((isset($request->basic) && $request->basic) || !isset($request->basic)){
+            $query = ConstructionSite::select(
+                "construction_sites.uuid",
+                "construction_sites.name",
+                "construction_sites.address",  
+            );
+        }else{  
+            $query = Property::select("construction_sites.*");
+        }
+
+        $query->where("id_agency", $agency->id);
+
+        $sites = $query->get();
+
+        return response()->json($sites);
 
     }
 

@@ -9,8 +9,11 @@ use App\Http\Controllers\ApiController;
 //     return $request->user();
 // });
 
+// properties
 Route::get("/properties", [ApiController::class, 'propertySearch']);
-
 Route::get("/property/{uuid}", [ApiController::class, 'getSingleProperty']);
+
+// construction sites
+Route::get("/construction_sites", [ApiController::class, 'constructionSites']);
 
 Route::post("/child_website/evalutation_email", [ApiController::class, 'sendEvalutationEmail']);
