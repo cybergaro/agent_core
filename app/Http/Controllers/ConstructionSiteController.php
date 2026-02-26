@@ -6,9 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-
 use App\Services\BrevoMailer;
 
 use App\Models\User;
@@ -287,6 +287,25 @@ class ConstructionSiteController extends Controller
             return;
         }
 
+        // rimuovo le immagini associate
+        $images = ConstructionSiteImage::where("id_construction_site", $construction->id)->get();
+
+        foreach ($images as $image) {
+            if (Storage::disk('public')->exists($image->path)) {
+                Storage::disk('public')->delete($image->path);
+            }
+            $image->delete();
+        }
+
+        // rimuovo i documenti associati
+        $documents = ConstructionSiteDocument::where("id_construction_site", $construction->id)->get();
+        foreach ($documents as $document) {
+            if (Storage::disk('public')->exists($document->path)) {
+                Storage::disk('public')->delete($document->path);
+            }
+            $document->delete();
+        }
+
         $construction->delete();
 
         return redirect()->back();
@@ -299,6 +318,16 @@ class ConstructionSiteController extends Controller
 
         if(!$construction || $construction->id_agency != $agency->id || $unit->id_construction_site != $construction->id){
             return;
+        }
+
+        // rimuovo le immagini associate
+        $images = ConstructionSiteImage::where("id_construction_site_unit", $unit->id)->get();
+
+        foreach ($images as $image) {
+            if (Storage::disk('public')->exists($image->path)) {
+                Storage::disk('public')->delete($image->path);
+            }
+            $image->delete();
         }
 
         $unit->delete();

@@ -21,7 +21,7 @@
         <h3 class="font-semibold text-gray-700 mb-3 text-lg hidden" id="list-title">Documenti Caricati:</h3>
         <ul id="file-list" class="flex flex-col gap-3">
             
-            @if(isset($documents) && $documents->count() > 0)
+            @if(isset($documents) && count($documents) > 0)
                 @foreach($documents as $doc)
                     <li class="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200" id="existing-doc-{{ $doc->id }}">
                         <div class="flex items-center gap-3 overflow-hidden">
