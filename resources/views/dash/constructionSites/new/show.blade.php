@@ -11,12 +11,13 @@
         <?= $construction->name ? 'Modifica "'.$construction->name.'"' : "Nuovo cantiere" ?>
     </h1>
     
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
         @csrf
 
         <input type="hidden" name="uuid" value="<?= $construction->uuid ?>">
         
         @include('dash.constructionSites.new.partials.general')
+        @include('dash.constructionSites.new.partials.documents')
         @include('dash.constructionSites.new.partials.location')
         
         <button

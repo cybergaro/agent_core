@@ -16,6 +16,9 @@ use App\Models\PropertyImage360;
 use App\Models\PropertyFloorPlan;
 use App\Models\WebsiteEmail;
 use App\Models\ConstructionSite;
+use App\Models\ConstructionSiteUnit;
+use App\Models\ConstructionSiteDocument;
+
 
 class ApiController extends Controller
 {
@@ -160,14 +163,14 @@ class ApiController extends Controller
             ]);
         }
 
-        if((isset($request->basic) && $request->basic) || !isset($request->basic)){
+        if((isset($request->basic) && $request->basic == "true") || !isset($request->basic)){
             $query = ConstructionSite::select(
                 "construction_sites.uuid",
                 "construction_sites.name",
                 "construction_sites.address",  
             );
         }else{  
-            $query = Property::select("construction_sites.*");
+            $query = ConstructionSite::select("construction_sites.*");
         }
 
         $query->where("id_agency", $agency->id);
@@ -175,6 +178,32 @@ class ApiController extends Controller
         $sites = $query->get();
 
         return response()->json($sites);
+
+    }
+
+    public function constructionSite($uuid){
+        $site = ConstructionSite::where("uuid", $uuid)->first();
+        if(!$site){
+            return response()->json([
+                'error' => "cantiere non trovato"
+            ], 400);
+        }   
+        
+        $site->documents = ConstructionSiteDocument::select(
+                'construction_site_documents.path',
+                'construction_site_documents.name',
+                'construction_site_documents.ext'
+            )
+            ->where("id_construction_site", $site->id)
+            ->get();
+
+        $units = ConstructionSiteUnit::select("construction_site_units.uuid")
+            ->where("id_construction_site", $site->id)
+            ->get();
+
+        $site->units = $units->pluck("uuid");
+
+        return response()->json($site);
 
     }
 

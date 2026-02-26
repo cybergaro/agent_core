@@ -15,5 +15,6 @@ Route::get("/property/{uuid}", [ApiController::class, 'getSingleProperty']);
 
 // construction sites
 Route::get("/construction_sites", [ApiController::class, 'constructionSites']);
+Route::get("/construction_site/{uuid}", [ApiController::class, 'constructionSite']);
 
 Route::post("/child_website/evalutation_email", [ApiController::class, 'sendEvalutationEmail']);

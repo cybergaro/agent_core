@@ -18,6 +18,7 @@ use App\Models\Property;
 use App\Models\WebsiteEmail;
 use App\Models\ConstructionSite;
 use App\Models\ConstructionSiteUnit;
+use App\Models\ConstructionSiteDocument;
 
 class ConstructionSiteController extends Controller
 {
@@ -25,7 +26,9 @@ class ConstructionSiteController extends Controller
         $construction = new ConstructionSite();
         $title = "Nuovo cantiere";
 
-        return view("dash.constructionSites.new.show", compact("construction", "title"));
+        $documents = [];
+
+        return view("dash.constructionSites.new.show", compact("construction", "title", "documents"));
     }
 
     public function showEdit($agencyUuid, $siteUuid){
@@ -36,9 +39,11 @@ class ConstructionSiteController extends Controller
             return;
         }
 
+        $documents = ConstructionSiteDocument::where("id_construction_site", $construction->id)->get();
+
         $title = "Modifica ".$construction->name;
 
-        return view("dash.constructionSites.new.show", compact("construction", "title"));
+        return view("dash.constructionSites.new.show", compact("construction", "title", "documents"));
     }
 
     public function new($agencyUuid, Request $request){
@@ -56,6 +61,8 @@ class ConstructionSiteController extends Controller
         
         $site->save();
 
+        $this->insertDocument($site, $request);
+
         return redirect()->route("site:units", ['siteUuid' => $site->uuid, "agencyUuid" => $agencyUuid]);
     }   
 
@@ -69,6 +76,8 @@ class ConstructionSiteController extends Controller
         $this->insertData($construction, $request);
         
         $construction->save();
+
+        $this->insertDocument($construction, $request);
         
         return redirect()->route("site:units", ['siteUuid' => $construction->uuid, "agencyUuid" => $agencyUuid]);
     }
@@ -89,6 +98,39 @@ class ConstructionSiteController extends Controller
         $site->zip_code =                   $request->input("zip_code");
         $site->latitude =                   $request->input("lat");
         $site->longitude =                  $request->input("lng");
+    }
+
+    private function insertDocument($site, $request){
+        // elimino i documenti che mi inidica il frontEnd
+        if ($request->filled('documents_to_delete')) {
+            $docsToDelete = $request->input('documents_to_delete');
+            
+            $documents = ConstructionSiteDocument::whereIn('id', $docsToDelete)
+                ->where("id_construction_site", $site->id)
+                ->get();
+
+            foreach ($documents as $document) {
+                if (Storage::disk('public')->exists($document->file_path)) {
+                    Storage::disk('public')->delete($document->file_path);
+                }
+                $document->delete();
+            }
+        }
+
+        // CARICAMENTO DEI NUOVI FILE
+        if ($request->hasFile('documents')) {
+            foreach ($request->file('documents') as $file) {
+                $path = $file->store('construction_sites/documents', 'public');
+
+                $document = new ConstructionSiteDocument();
+                $document->id_construction_site = $site->id;
+                $document->path = $path;
+                $document->name = $file->getClientOriginalName();
+                $document->ext= $file->getClientOriginalExtension();
+                
+                $document->save();
+            }
+        }
     }
 
     public function showUnits($agencyUuid, $siteUuid){

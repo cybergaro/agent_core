@@ -13,7 +13,7 @@
     <table class="mt-4 border-collapse rounded-3xl overflow-hidden">
         <tbody class="w-full bg-white">
             <?php foreach ($sites as $site) { ?>
-                <tr class="flex items-center px-5 py-5 hover:bg-gray-200 rounded-2xl cursor-pointer" onclick="window.location='/dashboard/<?=request()->route('agencyUuid')?>/construciton_site/<?= $site->uuid?>'">
+                <tr class="flex items-center px-5 py-5 hover:bg-gray-200 rounded-2xl cursor-pointer" onclick="window.location='/dashboard/<?=request()->route('agencyUuid')?>/construction_site/<?= $site->uuid?>'">
                     <td>
                         <?php if($site->image_path){ ?>
                             <img src="/storage/properties_images/<?= $property->image_path?>" class="h-25 w-40 object-cover rounded-xl">
