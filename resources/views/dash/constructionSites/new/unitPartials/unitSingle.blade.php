@@ -2,7 +2,7 @@
     class="flex px-8 py-4 overflow-hidden hover:bg-gray-100 transition rounded-2xl cursor-pointer gap-4 items-center"
 >
     <a href="/dashboard/<?=request()->route('agencyUuid')?>/construction_site/<?=request()->route('siteUuid')?>/unit/<?= $unit->uuid ?>" >
-        <img src="/img/image_not_found.webp" alt="Immagine" srcset="" class="h-20 w-35 object-cover rounded-lg">
+        <img src="<?= $unit->getFirstImagePath()? "/storage/".$unit->getFirstImagePath(): "/img/image_not_found.webp"?>" alt="Immagine" srcset="" class="h-20 w-35 object-cover rounded-lg">
     </a>
         
     <a 

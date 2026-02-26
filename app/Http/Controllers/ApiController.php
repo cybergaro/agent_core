@@ -197,9 +197,9 @@ class ApiController extends Controller
             ->where("id_construction_site", $site->id)
             ->get();
 
-        $units = ConstructionSiteUnit::select("construction_site_units.uuid")
-            ->where("id_construction_site", $site->id)
-            ->get();
+        $units = ConstructionSiteUnit::where("id_construction_site", $site->id)->orderBy("price", "ASC")->get();
+
+        $site->minPrice = count($units) ? $units[0]->price : 0;
 
         $site->units = $units->pluck("uuid");
 

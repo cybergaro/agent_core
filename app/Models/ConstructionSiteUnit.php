@@ -24,4 +24,14 @@ class ConstructionSiteUnit extends Model
             }
         });
     }    
+
+    public function firstImage()
+    {
+        return $this->hasOne(ConstructionSiteImage::class, 'id_construction_site_unit');
+    }
+
+    public function getFirstImagePath()
+    {
+        return $this->firstImage?->path;
+    }
 }

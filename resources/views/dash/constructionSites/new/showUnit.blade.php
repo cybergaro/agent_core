@@ -7,7 +7,7 @@
         Aggiungi o modifica un unità
     </h1>
     
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
         @csrf
 
         <input type="hidden" name="uuid" value="<?= $construction->uuid ?>">
@@ -16,6 +16,7 @@
         @include('dash.constructionSites.new.unitPartials.structure')
         @include('dash.constructionSites.new.unitPartials.energy')
         @include('dash.constructionSites.new.unitPartials.details')
+        @include('dash.constructionSites.new.unitPartials.images')
         
         <div class="flex gap-3">
 

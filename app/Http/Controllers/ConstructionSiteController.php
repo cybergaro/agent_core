@@ -18,6 +18,7 @@ use App\Models\Property;
 use App\Models\WebsiteEmail;
 use App\Models\ConstructionSite;
 use App\Models\ConstructionSiteUnit;
+use App\Models\ConstructionSiteImage;
 use App\Models\ConstructionSiteDocument;
 
 class ConstructionSiteController extends Controller
@@ -140,8 +141,10 @@ class ConstructionSiteController extends Controller
             return;
         }
 
-        $units = ConstructionSiteUnit::where("id_construction_site", $construction->id)->get();
-
+        $units = ConstructionSiteUnit::with('firstImage')
+            ->where("id_construction_site", $construction->id)
+            ->get();
+            
         return view("dash.constructionSites.new.showUnits", compact("construction", "agency", "units"));
     }
 
@@ -167,7 +170,9 @@ class ConstructionSiteController extends Controller
             return;
         }
 
-        return view("dash.constructionSites.new.showUnit", compact("construction", "agency", "unit"));
+        $images = ConstructionSiteImage::where("id_construction_site_unit", $unit->id)->get();
+
+        return view("dash.constructionSites.new.showUnit", compact("construction", "agency", "unit", "images"));
     }
 
     public function newUnit($agencyUuid, $siteUuid, Request $request){
@@ -187,6 +192,8 @@ class ConstructionSiteController extends Controller
 
         $unit->save();
 
+        $this->insertImages($request, $unit, $construction->id);
+
         return redirect()->route("site:units", ['siteUuid' => $construction->uuid, "agencyUuid" => $agencyUuid]);
     }
 
@@ -200,8 +207,10 @@ class ConstructionSiteController extends Controller
         }
 
         $this->insertUnitData($request, $unit);
-
+        
         $unit->save();
+
+        $this->insertImages($request, $unit, $construction->id);
 
         return redirect()->route("site:units", ['siteUuid' => $construction->uuid, "agencyUuid" => $agencyUuid]);           
     }
@@ -238,6 +247,36 @@ class ConstructionSiteController extends Controller
         $unit->heating_system_type =        $request->input("heating_system_type");
         $unit->heating_system_power =       $request->input("heating_system_power");
 
+    }
+
+    private function insertImages($request, $unit, $siteId){
+        if ($request->filled('images_to_delete')) {
+            $docsToDelete = $request->input('images_to_delete');
+            
+            $documents = ConstructionSiteImage::whereIn('id', $docsToDelete)
+                ->where("id_construction_site", $siteId)
+                ->get();
+
+            foreach ($documents as $document) {
+                if (Storage::disk('public')->exists($document->file_path)) {
+                    Storage::disk('public')->delete($document->file_path);
+                }
+                $document->delete();
+            }
+        }
+
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $file) {
+                $path = $file->store('construction_sites/images', 'public');
+
+                $document = new ConstructionSiteImage();
+                $document->id_construction_site = $siteId;
+                $document->id_construction_site_unit = $unit->id;
+                $document->path = $path;
+                $document->name = $file->getClientOriginalName();
+                $document->save();
+            }
+        }
     }
 
     public function delete($agencyUuid, $siteUuid){
