@@ -12,10 +12,9 @@ use Illuminate\Support\Str;
 use App\Services\BrevoMailer;
 
 use App\Models\User;
-use App\Models\EmailVerifyToken;
 use App\Models\Agency;
 use App\Models\Property;
-use App\Models\WebsiteEmail;
+use App\Models\Message;
 use App\Models\ConstructionSite;
 use App\Models\ConstructionSiteUnit;
 use App\Models\ConstructionSiteImage;
@@ -56,7 +55,6 @@ class ConstructionSiteController extends Controller
 
         $site = new ConstructionSite();
         $site->id_agency = $agency->id;
-        $site->id_owner = Auth::user()->id;
 
         $this->insertData($site, $request);
         

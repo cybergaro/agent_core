@@ -23,15 +23,18 @@
 </head>
 <?php 
 $options = [
-    ["name" => "Home", "path" => "", "icon" => "fa-solid fa-home"],
+    ["name" => "Home Agenzia", "path" => "", "icon" => "fa-solid fa-home"],
     ["name" => "Immobili", "path" => "properties", "icon" => "fa-solid fa-shop"],
     ["name" => "Cantieri", "path" => "construction_sites", "icon" => "fa-solid fa-person-digging"],
     ["name" => "Sito web", "path" => "website", "icon" => "fa-solid fa-globe"],
     // ["name" => "Social & Condivisione", "path" => "social", "icon" => "fa-solid fa-share-nodes"],
     ["name" => "Impostazioni", "path" => "settings", "icon" => "fa-solid fa-gear"],
-
 ];
 ?>
+
+<?php if(Auth::user()->role == "admin"){
+    $options[] = ["name" => "Agenti", "path"=>"users", "icon" =>"fa-solid fa-users"];
+} ?>
 
 <body class="overflow-hidden">
     <div class="flex h-screen bg-gray-100 font-sans">
@@ -58,12 +61,18 @@ $options = [
                     </nav>
 
                     <!-- Logout in basso -->
-                    <form method="GET" action="/logout" class="px-4 py-4 bg-white rounded-3xl">
-                        <button type="submit" class="flex items-center gap-2 w-full px-3 py-2 rounded-lg transition cursor-pointer">
+                    <div class="px-4 py-4 bg-white rounded-3xl">
+                        <?php if(Auth::user()->role == "admin"){ ?>
+                            <button type="submit" class="flex items-center gap-2 w-full px-3 py-2 rounded-lg transition cursor-pointer" onclick="location.href='/dashboard'">
+                                <i class="fa-solid fa-repeat"></i>
+                                <span>Cambia Agenzia</span>
+                            </button>
+                        <?php } ?>
+                        <button type="submit" class="flex items-center gap-2 w-full px-3 py-2 rounded-lg transition cursor-pointer" onclick="location.href='/logout'">
                             <i class="fa-solid fa-right-from-bracket"></i>
                             <span>Logout</span>
                         </button>
-                    </form>
+                    </div>
                 </div>
             </aside>
         <?php } ?>

@@ -12,7 +12,6 @@ use Illuminate\Support\Str;
 use App\Services\BrevoMailer;
 
 use App\Models\User;
-use App\Models\EmailVerifyToken;
 
 class AuthController extends Controller
 {
@@ -20,6 +19,10 @@ class AuthController extends Controller
     {
         $header = false;
         $title = "Login";
+
+        if(!User::count()){ // caso del primo login
+            return view('auth.createAdmin', compact('header', 'title'));
+        }
 
         return view('auth.login', compact('header', 'title'));
     }
@@ -43,8 +46,6 @@ class AuthController extends Controller
             return back()->withErrors(['captcha' => 'Verifica reCAPTCHA fallita, riprova.']);
         }
 
-        // verifico gli input
-
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|min:6',
@@ -54,27 +55,6 @@ class AuthController extends Controller
 
         if (!$user || !Hash::check($request->password, $user->password)) {
             return redirect()->back()->withErrors(['error' => 'Username o password errati']);
-        }
-
-        if(!$user->email_verified_at){
-
-            $token = new EmailVerifyToken();
-            
-            $html = view('emails.auth.verifyEmail', ['token' => $token->createToken($user->id)])->render();
-
-            $mailer = new BrevoMailer();
-
-            $mailer->sendCustomEmail(
-                $user->email,
-                $user->name . ' ' . $user->surname,
-                'Verifica la tua email',
-                $html
-            );
-
-            $header = false;
-
-            return view("auth.verifyEmail", compact("header"));
-            
         }
     
         $remember = $request->has('remember');
@@ -90,15 +70,26 @@ class AuthController extends Controller
         return redirect()->route('home');
     }
 
-    public function createAdmin(){
+    public function createAdmin(Request $request){
+
+        if(User::count()){ 
+            // caso in cui ci sono già altri utenti
+            return;
+        }
+
         $user = new User();
-        $user->name = 'Francesco';
-        $user->surname = 'Garofolo';
-        $user->email = 'francyclimber@gmail.com';
-        $user->phone = '3791508192';
-        $user->password = Hash::make('cybergaro');
+        $user->name = $request->input("name");
+        $user->surname = $request->input("surname");
+        $user->email = $request->input("email");
+        $user->phone = $request->input("phone");
+        $user->password = $request->input("password");
         $user->role = 'admin';
         $user->save();
+
+        Auth::login($user);
+
+        return redirect()->route('dashboard');
+
     }
 
     public function showUserSettings()
@@ -206,43 +197,8 @@ class AuthController extends Controller
 
         // Log::info('User created', 'AuthController:registration',[], $user->id);
     
-        $token = new EmailVerifyToken();
-            
-        $html = view('emails.auth.verifyEmail', ['token' => $token->createToken($user->id)])->render();
-
-        $mailer = new BrevoMailer();
-
-        $mailer->sendCustomEmail(
-            $user->email,
-            $user->name . ' ' . $user->surname,
-            'Verifica la tua email',
-            $html
-        );
-
         $header = false;
 
         return view("auth.verifyEmail", compact("header"));
-    }
-
-    public function emailCheck($token)
-    {
-        $token = EmailVerifyToken::where("token", $token)->first();
-
-        if(!$token){
-            return "token not found";
-        }
-
-        $user = User::find($token->id_user);
-
-        if($user->email_verified){
-            return redirect()->route("login");
-        }
-
-        $user->email_verified_at = date("Y-m-d");
-        $user->save();
-
-        Auth::login($user, true);
-
-        return redirect()->route("dashboard");
     }
 }

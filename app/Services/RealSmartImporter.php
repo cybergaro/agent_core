@@ -9,6 +9,7 @@ use App\Models\PropertyRoom;
 use App\Models\PropertyImage;
 use App\Models\PropertyFloorPlan;
 use App\Models\PropertyImage360;
+use App\Models\User;
 use App\Models\Log;
 
 use Illuminate\Support\Facades\Http;
@@ -24,7 +25,7 @@ class RealSmartImporter
         $agencies = Agency::where('enable_real_smart_importer', true)->get();
 
         foreach ($agencies as $agency) {
-            if (!$agency->real_smart_xml_url || !$agency->id_user_owner) {
+            if (!$agency->real_smart_xml_url) {
                 continue;
             }
 
@@ -77,12 +78,12 @@ class RealSmartImporter
                 $property = new Property();
                 $property->uuid = Str::uuid();
                 $property->created_at = now();
+                $property->id_owner = User::first()->id;
+                $property->imported_from = 'realsmart';
             }
 
             $property->updated_at = now();
-            $property->imported_from = 'realsmart';
             $property->id_agency = $agency->id;
-            $property->id_owner = $agency->id_user_owner;
             $property->real_smart_id = (string) $single->Codice;
             $property->name = (string) $single->Titolo;
             $property->description = (string) $single->AnnuncioCompleto;

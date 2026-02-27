@@ -19,10 +19,12 @@ Route::get("/", function (){
 Route::middleware("guest")->controller(AuthController::class)->group(function () {
     Route::get('/login', 'showLogin')->name("login");
     Route::post('/login', 'login');
-    Route::get('/registration', 'showRegistration')->name("registration");
-    Route::post('/registration', 'registration');
+
+    Route::post('/createAdmin', 'createAdmin');
+
+    // Route::get('/registration', 'showRegistration')->name("registration");
+    // Route::post('/registration', 'registration');
     
-    Route::get('/emailCheck/{token}', 'emailCheck');
 });
 
 Route::get('/logout', [AuthController::class, 'logout'])->name("logout");
@@ -68,15 +70,19 @@ Route::prefix('dashboard')->group(function () {
         Route::get("/social", [SocialController::class, 'show'])->name("agency:social");
 
         Route::get("/website", [DashController::class, 'showWebsite'])->name("agency:website");
-        Route::get("/website/emails", [DashController::class, 'showWebsiteEmails'])->name("agency:website:emails");
+        Route::get("/website/messages", [DashController::class, 'showMessages']);
+
+        Route::get("/users", [DashController::class, 'showAgencyUsers'])->name("agency:users");
 
         Route::get("/settings", [DashController::class, 'settings'])->name("agency:settings");
         Route::get("/settings/import", [DashController::class, 'settingsImport'])->name("agency:settings:import");
         Route::post("/settings/import", [DashController::class, 'saveSettingsImport']);
 
         Route::get("/settings/export", [DashController::class, 'settingsExport'])->name("agency:settings:export");
-        Route::post("/settings/export", [DashController::class, 'saveSettingsExport'])->name("agency:settings:export");
-
+        Route::post("/settings/export", [DashController::class, 'saveSettingsExport']);
+        
+        Route::get("/settings/api", [DashController::class, 'settingsApi'])->name("agency:settings:api");
+        Route::post("/settings/api", [DashController::class, 'saveSettingsApi']);
 
         Route::get("/settings/agency", [DashController::class, 'agencySettingsShow']);
         Route::post("/settings/agency", [DashController::class, 'agencySettings']);

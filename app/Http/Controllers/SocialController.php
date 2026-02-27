@@ -11,6 +11,5 @@ use Illuminate\Support\Str;
 use App\Services\BrevoMailer;
 
 use App\Models\User;
-use App\Models\EmailVerifyToken;
 use App\Models\Agency;
 use App\Models\Property;
