@@ -14,6 +14,9 @@ export default defineConfig({
         host: true,
         port: 5173,
         allowedHosts: ['agentcore.francescogarofolo.com'],
-        origin: 'http://localhost:5173'
+        origin: 'http://localhost:5173',
+        watch: {
+            ignored: ['**/vendor/**', '**/node_modules/**'],
+        },
     },
 });

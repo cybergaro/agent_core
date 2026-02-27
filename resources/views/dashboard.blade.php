@@ -32,7 +32,7 @@ $options = [
 ];
 ?>
 
-<?php if(Auth::user()->role == "admin"){
+<?php if(Auth::user() && Auth::user()->role == "admin"){
     $options[] = ["name" => "Agenti", "path"=>"users", "icon" =>"fa-solid fa-users"];
 } ?>
 
