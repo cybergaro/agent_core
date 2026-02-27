@@ -11,13 +11,12 @@ use Illuminate\Support\Str;
 use App\Services\BrevoMailer;
 
 use App\Models\User;
-use App\Models\EmailVerifyToken;
 use App\Models\Agency;
 
 class AgencyController extends Controller
 {
     public function showNew()
-    {
+    {   
         $title = "Nuova Agenzia";
         $header = false;
 
@@ -25,6 +24,11 @@ class AgencyController extends Controller
     }
 
     public function new(Request $request){
+
+        if(Auth::user()->role != "admin"){
+            return;
+        }
+
         $request->validate([
             'name' => ['required', 'string', 'max:255'], 
             'email' => ['required', 'email', 'max:255'],
@@ -34,7 +38,6 @@ class AgencyController extends Controller
         ]);
 
         $agency = new Agency();
-        $agency->id_user_owner = Auth::id();
         $agency->name = $request->input("name");
         $agency->email = $request->input("email");
         $agency->phone = $request->input("phone");

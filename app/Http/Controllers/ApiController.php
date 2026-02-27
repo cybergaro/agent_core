@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 use App\Services\BrevoMailer;
 
@@ -14,12 +15,16 @@ use App\Models\Property;
 use App\Models\PropertyImage;
 use App\Models\PropertyImage360;
 use App\Models\PropertyFloorPlan;
-use App\Models\WebsiteEmail;
+use App\Models\Message;
+use App\Models\ConstructionSite;
+use App\Models\ConstructionSiteUnit;
+use App\Models\ConstructionSiteDocument;
+use App\Models\ConstructionSiteImage;
+
 
 class ApiController extends Controller
 {
     public function propertySearch(Request $request){
-
         if((isset($request->basic) && $request->basic) || !isset($request->basic)){
             $query = Property::select(
                 "properties.uuid",
@@ -140,6 +145,126 @@ class ApiController extends Controller
 
     }
 
+    public function constructionSites(Request $request){
+        $validator = Validator::make($request->all(), [
+            'agency'   => 'required|uuid'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $agency = Agency::where("uuid", $request->agency)->first();
+
+        if(!$agency){
+            return response()->json([
+                'error' => "agency not exist"
+            ]);
+        }
+
+        if((isset($request->basic) && $request->basic == "true") || !isset($request->basic)){
+            $query = ConstructionSite::select(
+                "construction_sites.uuid",
+                "construction_sites.name",
+                "construction_sites.address",  
+            );
+        }else{  
+            $query = ConstructionSite::select("construction_sites.*");
+        }
+
+        $query->addSelect([
+            'image_url' => ConstructionSiteImage::select(DB::raw("CONCAT('".env("APP_URL")."/storage/', path)"))
+                ->whereColumn('id_construction_site', 'construction_sites.id')
+                ->orderBy('id', 'asc')
+                ->limit(1)
+            ]);
+
+        $query->addSelect([
+            'min_price' => ConstructionSiteUnit::select("price")
+                ->whereColumn('id_construction_site', 'construction_sites.id')
+                ->orderBy('price', 'asc')
+                ->limit(1)
+            ]);
+
+        $query->where("id_agency", $agency->id);
+
+        $sites = $query->get();
+
+        return response()->json($sites);
+
+    }
+
+    public function constructionSite($uuid){
+        $site = ConstructionSite::where("uuid", $uuid)->first();
+        if(!$site){
+            return response()->json([
+                'error' => "cantiere non trovato"
+            ], 400);
+        }   
+        
+        $site->documents = ConstructionSiteDocument::select(
+                DB::raw("CONCAT('" . config('app.url') . "/storage/', construction_site_documents.path) AS document_url"),
+                'construction_site_documents.name',
+                'construction_site_documents.ext'
+            )
+            ->where("id_construction_site", $site->id)
+            ->get();
+
+        $site->images = ConstructionSiteImage::select(
+                DB::raw("CONCAT('" . config('app.url') . "/storage/', construction_site_images.path) AS image_url"),
+            )
+            ->where("id_construction_site", $site->id)
+            ->get()
+            ->pluck("image_url");
+    
+        $site->units = ConstructionSiteUnit::select(
+                "construction_site_units.uuid",
+                "construction_site_units.price",
+                "construction_site_units.name", 
+                "construction_site_units.size", 
+                "construction_site_units.n_bathroom", 
+                "construction_site_units.n_room", 
+                "construction_site_units.luxury", 
+                "construction_site_units.green", 
+            )->addSelect([
+                'image_url' => ConstructionSiteImage::select(DB::raw("CONCAT('".env("APP_URL")."/storage/', path)"))
+                    ->whereColumn('id_construction_site_unit', 'construction_site_units.id')
+                    ->orderBy('id', 'asc')
+                    ->limit(1)
+                ])
+            ->where("id_construction_site", $site->id)
+            ->orderBy("price", "ASC")
+            ->get();
+
+        $site->minPrice = count($site->units) ? $site->units[0]->price : 0;
+
+
+        return response()->json($site);
+
+    }
+
+    public function constructionSiteUnit($uuid){
+        $unit = constructionSiteUnit::where("uuid", $uuid)->first();
+
+        if(!$unit){
+            return response()->json([
+                'error' => "unità non trovata"
+            ], 400);
+        }
+
+        $unit->images = ConstructionSiteImage::select(
+                DB::raw("CONCAT('" . config('app.url') . "/storage/', construction_site_images.path) AS image_url"),
+            )
+            ->where("id_construction_site_unit", $unit->id)
+            ->get()
+            ->pluck("image_url");
+
+        return response()->json($unit);
+    }
+
+    // questo è un vecchio end point, viene mantenuto solo per retrocompatibilità
     public function sendEvalutationEmail(Request $request){
 
         $validator = Validator::make($request->all(), [
@@ -175,15 +300,12 @@ class ApiController extends Controller
             ]);
         }
 
-        $emailDb = new WebsiteEmail;
+        $emailDb = new Message;
         $emailDb->id_agency = $agency->id;
         $emailDb->name = $request->name;
         $emailDb->tel = $request->tel;
         $emailDb->email = $request->email;
-        $emailDb->n_room = $request->n_room;
-        $emailDb->size = $request->size;
-        $emailDb->address = $request->address;
-        $emailDb->description = $request->description;
+        $emailDb->message = $request->description;
         $emailDb->save();     
 
         
@@ -205,5 +327,129 @@ class ApiController extends Controller
             'Nuova richiesta di valutazione',
             $html
         );
+    }
+
+    public function sendMessage(Request $request){
+        // Ottieni le credenziali su Google Cloud:
+        // Crea un progetto sulla Google Cloud Console.
+        // Abilita la Google Sheets API.
+        // Crea un Account di servizio e scarica la chiave nel formato JSON (rinominala credentials.json).
+        // Autorizza lo script: Apri il tuo Google Sheet e condividilo (assegnando il ruolo di "Editor") con l'indirizzo email speciale che trovi dentro il file JSON (alla voce client_email).
+
+
+        $validator = Validator::make($request->all(), [
+            'agency'   => 'required|uuid',
+            'name'        => 'nullable|string|max:255',
+            'tel'     => 'nullable|string|max:255',
+            'email'       => 'nullable|email|max:255',
+            'message' => 'nullable|string',
+            'category'    => [
+                'required', 
+                'string', 
+                Rule::in([
+                    'buy', 'sell', 'evaluation', 'visit_buy', 
+                    'rent', 'let', 'visit_rent', 'management', 
+                    'mortgage', 'technical', 'construction', 
+                    'job', 'other'
+                ])
+            ],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $agency = Agency::where("uuid", $request->agency)->first();
+        
+        if(!$agency){
+            return response()->json([
+                "status" => 400,
+                "error" => "This agency does not exist"
+            ]);
+        }
+
+        $message = new Message();
+        $message->id_agency = $agency->id;
+        $message->name = $request->name;
+        $message->tel = $request->tel;
+        $message->email = $request->email;
+        $message->message = $request->message;
+        $message->category = $request->category;
+        $message->json = "";
+        $message->save();
+
+        // invio i dati per email
+        $html = view('emails.childWebsite.message', [
+            'name' => $request->name,
+            'tel' => $request->tel,
+            'email' => $request->email,
+            'message' => $request->message,
+            'category' => $request->category
+        ])->render();
+
+        $mailer = new BrevoMailer();
+
+        $mailer->sendCustomEmail(
+            $agency->email,
+            $agency->name,
+            'Nuova Messaggio dal sito web',
+            $html
+        );
+
+        // condivido su google sheet
+        if($agency->google_cloud_credentials && $agency->google_sheet_id){
+
+            $credentialsArray = json_decode($agency->google_cloud_credentials, true);
+
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                die("Errore nella decodifica del JSON: " . json_last_error_msg());
+            }
+
+            $client = new \Google_Client();
+            $client->setApplicationName('Integrazione PHP - Google Fogli');
+            $client->setScopes([\Google_Service_Sheets::SPREADSHEETS]);
+            $client->setAccessType('offline');
+
+            $client->setAuthConfig($credentialsArray);
+
+            $service = new \Google_Service_Sheets($client);
+
+            $range = 'Foglio1!A:D'; 
+
+            $values = [[
+                $request->name, 
+                $request->email,
+                $request->tel,
+                $request->text
+            ]];
+
+            $body = new \Google_Service_Sheets_ValueRange([
+                'values' => $values
+            ]);
+
+            $params = [
+                'valueInputOption' => 'USER_ENTERED' 
+            ];
+
+            try {
+                $result = $service->spreadsheets_values->append(
+                    $agency->google_sheet_id, 
+                    $range, 
+                    $body, 
+                    $params
+                );
+                
+                echo "Operazione completata: " . $result->getUpdates()->getUpdatedCells() . " celle aggiornate.\n";
+            } catch (Exception $e) {
+                echo "Errore durante la scrittura sul foglio: " . $e->getMessage() . "\n";
+            }
+
+        }
+
+        return response()->json([
+            "status" => 200,
+        ]);
     }
 }

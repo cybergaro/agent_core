@@ -24,7 +24,7 @@ class CheckAgencyPermission
             abort(404, 'Agency not found');
         }
 
-        if (Auth::id() !== $agency->id_user_owner) {
+        if (Auth::user()->role != "admin" && Auth::id()->id_agency != $agency->id) {
             abort(403, "You don't have the permission to access this agency");
         }
 

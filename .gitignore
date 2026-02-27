@@ -25,3 +25,4 @@ resources/.DS_Store
 resources/lang/.DS_Store
 resources/views/.DS_Store
 resources/views/dash/agency/.DS_Store
+vite.config.js

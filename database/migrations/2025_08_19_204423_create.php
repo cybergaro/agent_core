@@ -48,7 +48,7 @@ return new class extends Migration
             $table->boolean('independent')->default(false);
 
             // Altri dettagli
-            $table->string('ape', 5)->nullable();
+            $table->string('ape', 100)->nullable();
             $table->smallInteger('year_production')->nullable();
             $table->integer('size')->nullable();
             $table->decimal('condominium_fees', 10, 2)->nullable();

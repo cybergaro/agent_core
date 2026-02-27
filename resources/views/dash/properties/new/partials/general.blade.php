@@ -40,7 +40,7 @@
                 id="type"
                 class="mt-1 border border-gray-300 rounded-lg outline-none px-4 py-3 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
             >
-                <option value="redisential" <?= $property->type == "redisential" ? "selected" : ""?>>Residenziale</option>
+                <option value="residential" <?= $property->type == "residential" ? "selected" : ""?>>Residenziale</option>
                 <option value="commercial" <?=  $property->type == "commercial" ? "selected" : ""?>>Commerciale</option>
                 <option value="industrial" <?=  $property->type == "industrial" ? "selected" : ""?>>Industriale</option>
             </select>

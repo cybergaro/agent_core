@@ -12,10 +12,54 @@
 
     <table class="mt-4 border-collapse rounded-3xl overflow-hidden">
         <tbody class="w-full bg-white">
-            <?php foreach ($constructionSites as $construction) { ?>
-                
+            <?php foreach ($sites as $site) { ?>
+                <tr class="flex items-center px-5 py-5 hover:bg-gray-200 rounded-2xl cursor-pointer" onclick="window.location='/dashboard/<?=request()->route('agencyUuid')?>/construction_site/<?= $site->uuid?>'">
+                    <td>
+                        <?php if($site->image_path){ ?>
+                            <img src="/storage/properties_images/<?= $property->image_path?>" class="h-25 w-40 object-cover rounded-xl">
+                        <?php }else{ ?>
+                            <img src="/img/image_not_found.webp" class="h-25 w-40 object-cover rounded-xl">
+                        <?php } ?>
+                    </td>
+                    <td class="ml-4 w-130">
+                        <h2 class="font-semibold text-md"><?= $site->name ?></h2>
+                        <p class="text-sm"><?= $site->description ?></p>
+                        <p class="text-sm">
+                            <i class="fa-solid fa-location-dot"></i>
+                            <?= $site->address ?>
+                        </p>
+                    </td>
+                    <td class="flex gap-3 items-center">
+                        <a href="/dashboard/<?=request()->route('agencyUuid')?>/construction_site/<?= $site->uuid?>/delete">
+                            <i class="fa-solid fa-trash text-red-600"></i>
+                        </a>
+                    </td>
+                </tr>
             <?php } ?>
         </tbody>
     </table>
+    <?php if(count($sites)) { ?>
+        <div class="rounded-xl h-10 flex items-center overflow-x-auto bg-white w-fit mt-5">
+            <?php 
+                $current = $sites->currentPage();
+            ?>
+            <button class="rounded-xl cursor-pointer h-full text-gray-600 px-3 w-10 hover:bg-gray-200" onclick="location.href='?page=<?= $current > 1 ? $current-1 : "" ?>'">
+                <i class="fa-solid fa-angle-left"></i>
+            </button>
+            
+            <?php for ($i=1; $i < $sites->lastPage()+1; $i++) {  ?>
+                <button 
+                    class="px-2 h-full w-10 cursor-pointer rounded-xl <?= $current == $i ? "bg-blue-600 text-white" : "hover:bg-gray-200 text-gray-600" ?> font-semibold" 
+                    onclick="location.href='?page=<?=$i?>'"
+                >
+                    <?= $i ?>
+                </button>
+            <?php } ?>
+            
+            <button class="rounded-xl cursor-pointer h-full text-gray-600 px-3 w-10 hover:bg-gray-200" onclick="location.href='?page=<?= $sites->lastPage() != $current ? $current+1 : $current ?>'">
+                <i class="fa-solid fa-angle-right"></i>
+            </button>
+        </div>
+    <?php } ?>
 </div>  
 @endsection

@@ -12,23 +12,31 @@ use Illuminate\Support\Str;
 use App\Services\BrevoMailer;
 
 use App\Models\User;
-use App\Models\EmailVerifyToken;
+use App\Models\ConstructionSite;
 use App\Models\Agency;
 use App\Models\Property;
-use App\Models\WebsiteEmail;
+use App\Models\Message;
 
 class DashController extends Controller
 {
     public function default()
     {
-        $title = "Dashboard";
+        // caso utente amministratore
+        if(Auth::user()->role == "admin"){
+            $agencies = Agency::orderBy("name", "ASC")->get();
+            
+            if(!count($agencies)){
+                return redirect()->route("agency:new");
+            }
 
-        // recurpero
-        $agencies = Agency::where("id_user_owner", Auth::id())->get();
+            $header = false;
 
-        if(!count($agencies)){
-            return redirect()->route("agency:new");
+            return view("agencies", compact("agencies", "header"));
+
+        }else{ // caso utente "agente"
+            $agencies = Agency::where("id_user_owner", Auth::id())->get();
         }
+
 
         return redirect()->route("agency:dash", ["agencyUuid" => $agencies[0]->uuid]);
     }
@@ -74,10 +82,13 @@ class DashController extends Controller
     public function getConstructionSite($agencyUuid){
         $agency = Agency::where("uuid", $agencyUuid)->first();
 
-        $constructionSites = [];
+        $sites = ConstructionSite::where("id_agency", $agency->id)
+            ->orderBy("id", "DESC")
+            ->paginate(10);
+
         $title = "Cantieri";
         
-        return view("dash.constructionSites.list", compact("constructionSites", "title"));
+        return view("dash.constructionSites.list", compact("sites", "title"));
     }
 
     public function settings($agencyUuid){
@@ -99,6 +110,44 @@ class DashController extends Controller
         $agency->real_smart_xml_url = $request->input("real_smart_xml_url");
         $agency->enable_real_smart_importer = $request->has("enable_real_smart_importer");
         $agency->real_smart_remove_after_delete = $request->has("real_smart_remove_after_delete");
+
+        $agency->save();
+
+        return redirect()->back()->withSuccess("Impostazioni modificate");
+    }   
+
+    public function settingsExport($agencyUuid){
+        $agency = Agency::where("uuid", $agencyUuid)->first();
+        
+        $title = "Impostazioni esportazione";
+
+        return view("dash.agency.settings.export", compact("agency", "title"));
+    }
+
+    public function saveSettingsExport($agencyUuid, Request $request){
+
+        $agency = Agency::where("uuid", $agencyUuid)->first();
+        
+        $agency->google_cloud_credentials = $request->input("google_cloud_credentials");
+        $agency->google_sheet_id = $request->input("google_sheet_id");
+
+        $agency->save();
+
+        return redirect()->back()->withSuccess("Impostazioni modificate");
+    }   
+
+    public function settingsApi($agencyUuid, Request $request){
+        $agency = Agency::where("uuid", $agencyUuid)->first();
+        
+        $title = "API";
+
+        return view("dash.agency.settings.api", compact("agency", "title"));
+    }   
+
+     public function saveSettingsApi($agencyUuid, Request $request){
+        $agency = Agency::where("uuid", $agencyUuid)->first();
+        
+        $agency->website_connection = $request->has("website_connection");
 
         $agency->save();
 
@@ -132,12 +181,23 @@ class DashController extends Controller
         return view("dash.website.show", compact("agency", "title"));
     }
 
-    public function showWebsiteEmails($agencyUuid){
-        $title = "Richieste di valutazione";
+    public function showMessages($agencyUuid){
+        $title = "Messaggi";
         $agency = Agency::where("uuid", $agencyUuid)->first();
 
-        $emails = WebsiteEmail::orderBy("id", "DESC")->get();
+        $messages = Message::orderBy("id", "DESC")->get();
 
-        return view("dash.website.emails", compact("agency", "title", "emails"));
+        return view("dash.website.messages", compact("agency", "title", "messages"));
+    }
+
+    public function showAgencyUsers($agencyUuid){
+        if(Auth::user()->role != "admin"){return;}
+
+        $agency = Agency::where("uuid", $agencyUuid)->first();
+        $users = User::where("id_agency", $agency->id)->orderBy("name", "ASC")->get();
+
+        $title = "Agenti";
+
+        return view("dash.agency.users.show", compact("title", "users"));
     }
 }

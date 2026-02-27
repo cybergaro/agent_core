@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class WebsiteEmail extends Model
+class Message extends Model
 {
-    protected $table = 'websites_emails';
+    protected $table = 'messages';
 
     const UPDATED_AT = null;
 }

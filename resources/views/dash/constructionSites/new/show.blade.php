@@ -11,16 +11,21 @@
         <?= $construction->name ? 'Modifica "'.$construction->name.'"' : "Nuovo cantiere" ?>
     </h1>
     
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
         @csrf
 
         <input type="hidden" name="uuid" value="<?= $construction->uuid ?>">
         
+        @include('dash.constructionSites.new.partials.general')
+        @include('dash.constructionSites.new.partials.documents')
+        @include('dash.constructionSites.new.partials.location')
+        
         <button
             class="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 mt-6 font-medium transition"
         >
-            <i class="fa-solid fa-upload"></i>
-            Inserisci Cantiere
+            <!-- <i class="fa-solid fa-upload"></i> -->
+            Vai alle unità
+            <i class="fa-solid fa-arrow-right"></i>
         </button>
     </form>
 </div>  

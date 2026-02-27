@@ -41,27 +41,28 @@
             <?php } ?>
         </tbody>
     </table>
-
-    <div class="rounded-xl h-10 flex items-center overflow-x-auto bg-white w-fit mt-5">
-        <?php 
-            $current = $properties->currentPage();
-        ?>
-        <button class="rounded-xl cursor-pointer h-full text-gray-600 px-3 w-10 hover:bg-gray-200" onclick="location.href='?page=<?= $current > 1 ? $current-1 : "" ?>'">
-            <i class="fa-solid fa-angle-left"></i>
-        </button>
-        
-        <?php for ($i=1; $i < $properties->lastPage()+1; $i++) {  ?>
-            <button 
-                class="px-2 h-full w-10 cursor-pointer rounded-xl <?= $current == $i ? "bg-blue-600 text-white" : "hover:bg-gray-200 text-gray-600" ?> font-semibold" 
-                onclick="location.href='?page=<?=$i?>'"
-            >
-                <?= $i ?>
+    <?php if(count($properties)) { ?>
+        <div class="rounded-xl h-10 flex items-center overflow-x-auto bg-white w-fit mt-5">
+            <?php 
+                $current = $properties->currentPage();
+            ?>
+            <button class="rounded-xl cursor-pointer h-full text-gray-600 px-3 w-10 hover:bg-gray-200" onclick="location.href='?page=<?= $current > 1 ? $current-1 : "" ?>'">
+                <i class="fa-solid fa-angle-left"></i>
             </button>
-        <?php } ?>
-        
-        <button class="rounded-xl cursor-pointer h-full text-gray-600 px-3 w-10 hover:bg-gray-200" onclick="location.href='?page=<?= $properties->lastPage() != $current ? $current+1 : $current ?>'">
-            <i class="fa-solid fa-angle-right"></i>
-        </button>
-    </div>
+            
+            <?php for ($i=1; $i < $properties->lastPage()+1; $i++) {  ?>
+                <button 
+                    class="px-2 h-full w-10 cursor-pointer rounded-xl <?= $current == $i ? "bg-blue-600 text-white" : "hover:bg-gray-200 text-gray-600" ?> font-semibold" 
+                    onclick="location.href='?page=<?=$i?>'"
+                >
+                    <?= $i ?>
+                </button>
+            <?php } ?>
+            
+            <button class="rounded-xl cursor-pointer h-full text-gray-600 px-3 w-10 hover:bg-gray-200" onclick="location.href='?page=<?= $properties->lastPage() != $current ? $current+1 : $current ?>'">
+                <i class="fa-solid fa-angle-right"></i>
+            </button>
+        </div>
+    <?php } ?>
 </div>  
 @endsection
