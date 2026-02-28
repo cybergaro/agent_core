@@ -394,7 +394,7 @@ class ApiController extends Controller
         $mailer->sendCustomEmail(
             $agency->email,
             $agency->name,
-            'Nuova Messaggio dal sito web',
+            'Nuovo Messaggio dal sito web',
             $html
         );
 
@@ -435,7 +435,7 @@ class ApiController extends Controller
             ];
 
             $values = [[
-                $message->created_at,
+                \Carbon\Carbon::parse($message->created_at)->format('d/m/Y'),
                 $request->name, 
                 $request->tel,
                 $request->email,
