@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\Rule;
 
 use App\Services\BrevoMailer;
@@ -373,7 +374,7 @@ class ApiController extends Controller
 
         // se attivo effettuo il controllo del captcha
         if($agency->enable_captcha && $agency->captcha_key){
-            
+
             $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
                 'secret'   => $agency->captcha_key,
                 'response' => $request->recaptcha_token,
