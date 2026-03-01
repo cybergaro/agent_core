@@ -373,11 +373,10 @@ class ApiController extends Controller
 
         // se attivo effettuo il controllo del captcha
         if($agency->enable_captcha && $agency->captcha_key){
-            $token = $request->input('g-recaptcha-response') ?? $request->input('recaptcha_token');
             
             $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
                 'secret'   => $agency->captcha_key,
-                'response' => $token,
+                'response' => $request->recaptcha_token,
                 'remoteip' => $request->ip(),
             ]);
             
