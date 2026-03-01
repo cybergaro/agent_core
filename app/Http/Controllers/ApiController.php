@@ -335,15 +335,16 @@ class ApiController extends Controller
         // Abilita la Google Sheets API.
         // Crea un Account di servizio e scarica la chiave nel formato JSON (rinominala credentials.json).
         // Autorizza lo script: Apri il tuo Google Sheet e condividilo (assegnando il ruolo di "Editor") con l'indirizzo email speciale che trovi dentro il file JSON (alla voce client_email).
-
-
+        
+        
         $validator = Validator::make($request->all(), [
-            'agency'   => 'required|uuid',
-            'name'        => 'nullable|string|max:255',
-            'tel'     => 'nullable|string|max:255',
-            'email'       => 'nullable|email|max:255',
-            'message' => 'nullable|string',
-            'category'    => [
+            'agency'            => 'required|uuid',
+            'name'              => 'nullable|string|max:255',
+            'tel'               => 'nullable|string|max:255',
+            'email'             => 'nullable|email|max:255',
+            'recaptcha_token'   => 'nullable|string',
+            'message'           => 'nullable|string',
+            'category'          => [
                 'required', 
                 'string', 
                 Rule::in([
@@ -368,6 +369,25 @@ class ApiController extends Controller
                 "status" => 400,
                 "error" => "This agency does not exist"
             ]);
+        }
+
+        // se attivo effettuo il controllo del captcha
+        if($agency->enable_captcha && $agency->captcha_key){
+            $token = $request->input('g-recaptcha-response') ?? $request->input('recaptcha_token');
+            
+            $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+                'secret'   => $agency->captcha_key,
+                'response' => $token,
+                'remoteip' => $request->ip(),
+            ]);
+            
+            $result = $response->json();
+            
+            if (isset($result['success']) && $result['success'] === true) {
+                // Utente umano
+            } else {
+                return response()->json(['captcha' => 'Verifica reCAPTCHA fallita, riprova.']);
+            }
         }
 
         $message = new Message();

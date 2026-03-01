@@ -25,6 +25,39 @@
             </label>
         </div>
     </div>
+    <div class="flex flex-col w-full bg-white rounded-2xl px-7 py-7 mt-6">
+        <h1 class="font-inter font-semibold text-2xl">Re-Captcha</h1>
+        <p class="mt-2 text-sm">
+            Alcune API Agent Core supportano la validazione delle richieste con il sistema Re-Captcha, tra cui: <br>
+            ~/child_website/message <br>
+            ~/child_website/evalutation_email <br>
+            Da questa sezione potrai abilitare la verifica del recaptcha ed inserire la PRIVATE_KEY
+        </p>
+        <div class="flex mt-4 gap-5">
+            <div class="flex flex-col">
+                <label for="captcha_key" class="text-sm font-semibold">Private Key <span class="text-red-500">*</span></label>
+                <input
+                    type="text"
+                    name="captcha_key"
+                    id="captcha_key"
+                    placeholder="Inserisci la private key del tuo captcha"
+                    value="<?= $agency->captcha_key ?>"
+                    class="mt-1 border border-gray-300 rounded-lg outline-none px-4 py-3 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 w-100"
+                >
+            </div>
+
+            <label class="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+                <input
+                    type="checkbox"
+                    name="enable_captcha"
+                    id="enable_captcha"
+                    <?= $agency->enable_captcha ? "checked" : "" ?>
+                    class="h-5 w-5 text-indigo-600 border-gray-400 rounded-lg focus:ring-indigo-500 focus:ring-offset-2 transition duration-150 ease-in-out"
+                >
+                Abilita la verifica del captcha sulle API
+            </label>
+        </div>
+    </div>
 
     <input type="submit"
         value="Salva"

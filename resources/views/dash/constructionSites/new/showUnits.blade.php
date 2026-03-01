@@ -42,12 +42,14 @@
                 <i class="fa-solid fa-arrow-left"></i>
                 Indietro
             </a>
-            <button
+
+            <a
                 class="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 mt-6 font-medium transition"
+                href="/dashboard/<?=request()->route('agencyUuid')?>/construction_sites"    
             >
                 Fine
                 <i class="fa-solid fa-upload"></i>
-            </button>
+            </a>
         </div>
     </form>
 </div>  
