@@ -53,6 +53,8 @@ Route::prefix('dashboard')->group(function () {
         Route::get("/property/new", [PropertiesController::class, 'newForm'])->name("agency:properties:new");
         Route::post("/property/new", [PropertiesController::class, 'new']);
         Route::get("/property/{propertyUuid}", [PropertiesController::class, 'showEdit']);
+        Route::post("/property/{propertyUuid}", [PropertiesController::class, 'edit']);
+        Route::get("/property/{propertyUuid}/delete", [PropertiesController::class, 'delete']);
         
         Route::get("/construction_sites", [DashController::class, 'getConstructionSite'])->name("agency:construction");
         Route::get("/construction_site/new", [ConstructionSiteController::class, 'showNew']);

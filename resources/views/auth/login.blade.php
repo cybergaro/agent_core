@@ -1,5 +1,9 @@
 @extends('dashboard')
 
+@section('after_head')
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+@endsection
+
 @section('content')
 <div class="flex h-screen w-full bg-gray-100">
     <div class="w-full md:w-1/2 flex items-center justify-center">
@@ -41,7 +45,7 @@
 
             <!-- Recaptcha -->
             <?php if(env("RECAPTCHA_ENABLE")){ ?>
-                <div class="g-recaptcha mt-6" data-sitekey="<?= env('RECAPTCHA_SITE_KEY') ?>"></div>
+                <div class="g-recaptcha mt-6" data-sitekey="<?= env('RECAPTCHA_PUBLIC_KEY') ?>"></div>
             <?php } ?>
 
             <input type="submit"
@@ -64,7 +68,6 @@
     </div>
 </div>
 
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
 <script>
     const login = () => {

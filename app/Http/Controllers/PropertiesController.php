@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 use App\Services\BrevoMailer;
@@ -13,6 +14,11 @@ use App\Services\BrevoMailer;
 use App\Models\User;
 use App\Models\Agency;
 use App\Models\Property;
+use App\Models\PropertyFloor;
+use App\Models\PropertyRoom;
+use App\Models\PropertyImage;
+use App\Models\PropertyFloorPlan;
+use App\Models\PropertyImage360;
 
 class PropertiesController extends Controller
 {
@@ -96,5 +102,58 @@ class PropertiesController extends Controller
         }
 
         return view("dash.properties.new.show", compact("property"));
+    }
+
+    public function edit($agencyUuid, $propertyUuid, Request $request){
+        $property = Property::where("uuid", $propertyUuid)->first();
+        $agency = Agency::where("uuid", $agencyUuid)->first();
+
+        if(!$property){
+            return "Immobile non esistente";
+        }
+
+        if($property->id_agency != $agency->id){
+            return "Non sei autorizzato a modificare questo immobile";
+        }
+
+        dd("codice bloccato");
+        $this->updateData($request, $property);
+
+    }
+
+    public function delete($agencyUuid, $propertyUuid){
+
+        $agency = Agency::where("uuid", $agencyUuid)->first();
+        $property = Property::where("uuid", $propertyUuid)
+            ->where("id_agency", $agency->id)
+            ->first();
+        
+        if(!$property){
+            dd("Immobile non esistente");
+        }
+
+        foreach ($property->images() as $img) {
+            if($img->path){
+                Storage::disk('public')->delete($img->path);
+            }
+        }
+        foreach ($property->images360() as $img) {
+            if($img->path){
+                Storage::disk('public')->delete($img->path);
+            }
+        }
+        foreach ($property->floorPlans() as $plan) {
+            if ($plan->path) {
+                Storage::disk('public')->delete($plan->path);
+            }
+        }
+
+        PropertyImage::where("id_property", $property->id)->delete();
+        PropertyImage360::where("id_property", $property->id)->delete();
+        PropertyFloorPlan::where("id_property", $property->id)->delete();
+        
+        $property->delete();
+
+        return redirect()->back()->withSuccess("Immobile eliminato");
     }
 }

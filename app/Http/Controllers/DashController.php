@@ -13,6 +13,7 @@ use App\Services\BrevoMailer;
 
 use App\Models\User;
 use App\Models\ConstructionSite;
+use App\Models\ConstructionSiteImage;
 use App\Models\Agency;
 use App\Models\Property;
 use App\Models\Message;
@@ -82,7 +83,14 @@ class DashController extends Controller
     public function getConstructionSite($agencyUuid){
         $agency = Agency::where("uuid", $agencyUuid)->first();
 
-        $sites = ConstructionSite::where("id_agency", $agency->id)
+        $sites = ConstructionSite::select("construction_sites.*")
+            ->addSelect([
+                'image_path' => ConstructionSiteImage::select("path")
+                    ->whereColumn('id_construction_site', 'construction_sites.id')
+                    ->orderBy('id', 'asc')
+                    ->limit(1)
+            ])
+            ->where("id_agency", $agency->id)
             ->orderBy("id", "DESC")
             ->paginate(10);
 
@@ -148,6 +156,10 @@ class DashController extends Controller
         $agency = Agency::where("uuid", $agencyUuid)->first();
         
         $agency->website_connection = $request->has("website_connection");
+
+        // Re-Captcha
+        $agency->enable_captcha = $request->has("enable_captcha");
+        $agency->captcha_key = $request->input("captcha_key");
 
         $agency->save();
 

@@ -42,6 +42,10 @@ $propertyTypes = [
     <h1 class="font-bold text-2xl mb-4 mt-3">
         <?= $property->name ? 'Modifica "'.$property->name.'"' : "Nuovo immobile" ?>
     </h1>
+
+    <?php if($property->imported_from) {?>
+        <p>Questo immobile è stato importato da un servizio esterno (<?= $property->imported_from ?>). É probabile che le modifiche che farai verranno sovrascritte nel momento di una nuova sincronizzazione</p>
+    <?php } ?>
     
     <form method="POST">
         @csrf
