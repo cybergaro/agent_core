@@ -5,6 +5,10 @@
 <div class="p-8">
     <div class="flex items-center">
         <h1 class="font-semibold text-2xl">Agenti</h1>
+        <a href="/dashboard/{{ request()->route('agencyUuid') }}/users/new" class="bg-blue-600 text-white text-md font-medium rounded-xl px-3 py-2 ml-5">
+            <i class="fa-solid fa-plus"></i> 
+            Aggiungi nuovo
+        </a>
     </div>
 
     <div class="mt-6 overflow-hidden rounded-3xl bg-white">

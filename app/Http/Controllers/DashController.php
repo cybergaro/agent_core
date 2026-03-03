@@ -52,8 +52,17 @@ class DashController extends Controller
             ->where("id_agency", $agency->id)
             ->groupBy('type')
             ->get();
+
+        $notifications = [];
+        
+        if($agency->website_connection){
+            $notifications = Message::where("id_agency", $agency->id)
+                ->orderBy("id", "DESC")
+                ->limit(6)
+                ->get();
+        }
     
-        return view("dash.agency.home", compact("title", "propertyType"));
+        return view("dash.agency.home", compact("title", "propertyType", "notifications"));
     }   
 
     public function getProperties($agencyUuid){
@@ -197,7 +206,7 @@ class DashController extends Controller
         $title = "Messaggi";
         $agency = Agency::where("uuid", $agencyUuid)->first();
 
-        $messages = Message::orderBy("id", "DESC")->get();
+        $messages = Message::where("id_agency", $agency->id)->orderBy("id", "DESC")->get();
 
         return view("dash.website.messages", compact("agency", "title", "messages"));
     }
