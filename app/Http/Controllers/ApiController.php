@@ -299,15 +299,21 @@ class ApiController extends Controller
                 "status" => 400,
                 "error" => "This agency is not enabled to use this method"
             ]);
-        }
+        } 
 
-        $emailDb = new Message;
-        $emailDb->id_agency = $agency->id;
-        $emailDb->name = $request->name;
-        $emailDb->tel = $request->tel;
-        $emailDb->email = $request->email;
-        $emailDb->message = $request->description;
-        $emailDb->save();     
+        $message = new Message();
+        $message->id_agency = $agency->id;
+        $message->name = $request->name;
+        $message->tel = $request->tel;
+        $message->email = $request->email;
+        $message->message = $request->description;
+        $message->category = "evaluation";
+        $message->json = json_encode([
+            "n_room" => $request->n_room,
+            "size" => $request->size,
+            "address" => $request->address,
+        ]);
+        $message->save();
 
         
         $html = view('emails.childWebsite.evalutationRequest', [

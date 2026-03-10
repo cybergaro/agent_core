@@ -28,7 +28,7 @@
     <div class="flex flex-col w-full bg-white rounded-2xl px-7 py-7 mt-6">
         <h1 class="font-inter font-semibold text-2xl">Re-Captcha</h1>
         <p class="mt-2 text-sm">
-            Alcune API Agent Core supportano la validazione delle richieste con il sistema Re-Captcha, tra cui: <br>
+            Alcune API Agent Core supportano la validazione delle richieste con il sistema Google Re-Captcha, tra cui: <br>
             ~/child_website/message <br>
             ~/child_website/evalutation_email <br>
             Da questa sezione potrai abilitare la verifica del recaptcha ed inserire la PRIVATE_KEY

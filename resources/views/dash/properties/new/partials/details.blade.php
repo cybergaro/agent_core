@@ -90,7 +90,7 @@
                 type="checkbox"
                 name="green"
                 id="green"
-                <?= $property->eco ? "checked" : "" ?>
+                <?= $property->green ? "checked" : "" ?>
                 class="h-5 w-5 text-indigo-600 border-gray-400 rounded-lg focus:ring-indigo-500 focus:ring-offset-2 transition duration-150 ease-in-out"
             >
             ECO sostenibile

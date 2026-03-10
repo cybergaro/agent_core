@@ -2,24 +2,6 @@
 
 @section('content')
 
-@php
-    $categoryTranslations = [
-        'buy'          => 'Cerco un immobile da acquistare',
-        'sell'         => 'Vorrei vendere il mio immobile',
-        'evaluation'   => 'Richiesta valutazione gratuita',
-        'visit_buy'    => 'Visita per annuncio di vendita',
-        'rent'         => 'Cerco un immobile in affitto',
-        'let'          => 'Propongo il mio immobile per l\'affitto',
-        'visit_rent'   => 'Visita per annuncio di affitto',
-        'management'   => 'Gestione affitti / Property Management',
-        'mortgage'     => 'Informazioni su mutui e finanziamenti',
-        'technical'    => 'Informazioni tecniche o burocratiche',
-        'construction' => 'Cantieri e nuove costruzioni',
-        'job'          => 'Lavora con noi / Candidatura',
-        'other'        => 'Informazioni generali / Altra richiesta'
-    ];
-@endphp
-
 <div class="p-8">
     <div class="flex items-center">
         <h1 class="font-semibold text-2xl">Messaggi</h1>
@@ -39,14 +21,13 @@
             </thead>
             <tbody>
                 @foreach ($messages as $message)
-                    <tr class="hover:bg-gray-200 transition-colors cursor-pointer" onclick="viewEmail()">
+                    <tr class="hover:bg-gray-200 transition-colors cursor-pointer" onclick="viewEmail(<?= $message->id ?>)">
                         <td class="px-6 py-4">{{ $message->name }}</td>
                         <td class="px-6 py-4">{{ $message->email }}</td>
                         <td class="px-6 py-4">{{ $message->tel }}</td>
                         
-                        {{-- Traduzione della categoria con fallback in caso di chiave non trovata --}}
                         <td class="px-6 py-4">
-                            {{ $categoryTranslations[$message->category] ?? 'Categoria sconosciuta' }}
+                            {{ __("message.".$message->category) }} 
                         </td>
                         
                         {{-- Formattazione della data in dd/mm/yyyy tramite Carbon --}}
@@ -60,11 +41,78 @@
             </tbody>
         </table>
     </div>
+
+    <div id="viewMessage">
+
+    </div>
 </div>  
 
 <script>
-    const viewEmail = () => {
-        console.log("ok")
+    const viewEmail = async (id) => {
+        const container = document.getElementById('viewMessage');
+        
+        container.innerHTML = `
+            <div class="fixed inset-0 z-50 flex justify-center items-center bg-black/60 backdrop-blur-sm">
+                <span class="text-white font-medium bg-gray-800 px-6 py-3 rounded-lg shadow-lg">Caricamento messaggio...</span>
+            </div>
+        `;
+
+        try {
+            const response = await fetch(`/dashboard/<?= $agency->uuid ?>/website/message/${id}`, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest' 
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Errore HTTP: ${response.status}`);
+            }
+
+            const htmlContent = await response.text();
+
+            container.innerHTML = htmlContent;
+
+            const modalOverlay = document.getElementById('evaluation-modal');
+            const modalBox = document.getElementById('modal-box');
+            const closeBtn = document.getElementById('close-btn');
+            const closeIcon = document.getElementById('close-icon');
+
+            const closeModal = () => {
+                container.innerHTML = '';
+            };
+
+            if (modalOverlay && modalBox) {
+                if (closeBtn) closeBtn.addEventListener('click', closeModal);
+                if (closeIcon) closeIcon.addEventListener('click', closeModal);
+
+                modalOverlay.addEventListener('click', function(event) {
+                    if (!modalBox.contains(event.target)) {
+                        closeModal();
+                    }
+                });
+            }
+
+        } catch (error) {
+            console.error("Si è verificato un errore durante il recupero dell'email:", error);
+            container.innerHTML = `
+                <div class="fixed inset-0 z-50 flex justify-center items-center bg-black/60 backdrop-blur-sm p-4">
+                    <div class="p-6 bg-white text-red-600 rounded-xl shadow-2xl max-w-sm w-full text-center">
+                        <p class="font-medium mb-4">Impossibile caricare il messaggio. Riprova più tardi.</p>
+                        <button onclick="document.getElementById('viewMessage').innerHTML=''" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">Chiudi</button>
+                    </div>
+                </div>
+            `;
+        }
     }
+
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            const container = document.getElementById('viewMessage');
+            if (container && container.innerHTML.trim() !== '') {
+                container.innerHTML = '';
+            }
+        }
+    });
 </script>
 @endsection

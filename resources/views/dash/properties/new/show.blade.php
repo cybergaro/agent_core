@@ -44,7 +44,10 @@ $propertyTypes = [
     </h1>
 
     <?php if($property->imported_from) {?>
-        <p>Questo immobile è stato importato da un servizio esterno (<?= $property->imported_from ?>). É probabile che le modifiche che farai verranno sovrascritte nel momento di una nuova sincronizzazione</p>
+        <div class="items-center gap-2 text-yellow-600 bg-yellow-50 border border-yellow-300 rounded-2xl p-4 px-6 text-sm mt-4 max-w-4xl mb-6 flex gap-3">
+            <i class="fa-solid fa-triangle-exclamation text-xl"></i>    
+            <p>Questo immobile è stato importato da un servizio esterno (<?= $property->imported_from ?>). É probabile che le modifiche che farai verranno sovrascritte nel momento di una nuova sincronizzazione</p>
+        </div>
     <?php } ?>
     
     <form method="POST">

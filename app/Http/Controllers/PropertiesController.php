@@ -116,9 +116,11 @@ class PropertiesController extends Controller
             return "Non sei autorizzato a modificare questo immobile";
         }
 
-        dd("codice bloccato");
         $this->updateData($request, $property);
 
+        $property->save();
+
+        return redirect()->back();
     }
 
     public function delete($agencyUuid, $propertyUuid){
