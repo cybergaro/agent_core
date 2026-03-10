@@ -211,6 +211,15 @@ class DashController extends Controller
         return view("dash.website.messages", compact("agency", "title", "messages"));
     }
 
+    public function getSingleMessage($agencyUuid, $id){
+
+        $agency = Agency::where("uuid", $agencyUuid)->first();
+        
+        $message = Message::where("id_agency", $agency->id)->where("id", $id)->first();
+
+        return view("dash.website.messagePartial", compact("message"));
+    }
+
     public function showAgencyUsers($agencyUuid){
         if(Auth::user()->role != "admin"){return;}
 

@@ -73,6 +73,7 @@ Route::prefix('dashboard')->group(function () {
 
         Route::get("/website", [DashController::class, 'showWebsite'])->name("agency:website");
         Route::get("/website/messages", [DashController::class, 'showMessages']);
+        Route::get("/website/message/{id}", [DashController::class, 'getSingleMessage']);
 
         Route::get("/users", [DashController::class, 'showAgencyUsers'])->name("agency:users");
         Route::get("/users/new", [AuthController::class, 'showRegistration'])->name("agency:users:new");
