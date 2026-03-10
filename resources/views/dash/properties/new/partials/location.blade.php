@@ -10,6 +10,7 @@
             placeholder="Es: Via Roma 33"
             min="0"
             class="mt-1 border border-gray-300 rounded-lg outline-none px-4 py-3 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 w-full"
+            onkeydown="if(event.key === 'Enter') { event.preventDefault(); geocodeAddress(); }"
         >
         <button id="search-button" 
             class="cursor-pointer h-8 w-8" 
