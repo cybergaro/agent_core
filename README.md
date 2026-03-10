@@ -1,7 +1,7 @@
 # Agent Core - Laravel Real Estate Management System
 
 <p align="center">
-  <img src="public/img/logoBlu.png" width="150" alt="Agent Core Logo">
+  <img src="public/img/logo_sfondo_scritta.png" width="150" alt="Agent Core Logo" style="border-radius:20px">
 </p>
 
 ## 📝 Project Description
