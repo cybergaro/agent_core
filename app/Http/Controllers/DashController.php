@@ -217,7 +217,7 @@ class DashController extends Controller
         
         $message = Message::where("id_agency", $agency->id)->where("id", $id)->first();
 
-        return view("dash.website.messagePartial", compact("message"));
+        return view("dash.website.messagePartial", compact("agency", "message"));
     }
 
     public function showAgencyUsers($agencyUuid){
