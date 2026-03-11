@@ -345,12 +345,15 @@ class ApiController extends Controller
         
         
         $validator = Validator::make($request->all(), [
-            'agency'            => 'required|uuid',
-            'name'              => 'nullable|string|max:255',
-            'tel'               => 'nullable|string|max:255',
-            'email'             => 'nullable|email|max:255',
-            'recaptcha_token'   => 'nullable|string',
-            'message'           => 'nullable|string',
+            'agency'                    => 'required|uuid',
+            'name'                      => 'nullable|string|max:255',
+            'tel'                       => 'nullable|string|max:255',
+            'email'                     => 'nullable|email|max:255',
+            'recaptcha_token'           => 'nullable|string',
+            'message'                   => 'nullable|string',
+            'uuid_property'             => 'nullable|string',
+            'uuid_construction_site'    => 'nullable|string',
+            'json'                      => 'nullable|json',
             'category'          => [
                 'required', 
                 'string', 
@@ -403,7 +406,23 @@ class ApiController extends Controller
         $message->email = $request->email;
         $message->message = $request->message;
         $message->category = $request->category;
-        $message->json = "";
+        $message->json = $request->json;
+        
+        if($request->uuid_property){
+            $property = Property::where("uuid", $request->uuid_property)->where("id_agency", $agency->id)->first();
+
+            if(!$property) return null;
+
+            $message->id_property = $property->id;
+
+        }else if($request->uuid_construction_site){
+            $site = ConstructionSite::where("uuid", $request->uuid_construction_site)->where("id_agency", $agency->id)->first();
+
+            if(!$site) return null;
+
+            $message->id_construction_site = $site->id;
+        }
+        
         $message->save();
 
         // invio i dati per email

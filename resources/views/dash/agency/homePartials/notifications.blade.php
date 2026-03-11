@@ -9,7 +9,7 @@
                 <div>
                     <h6 class="font-bold">Messaggio da: <?= $single->name ?></h6>
                     <p class="text-sm">{{ \Illuminate\Support\Str::limit($single->message, 300) }}</p>
-                    <p class="text-sm"><?= date("d/m/Y", strtotime($single->date)) ?></p>
+                    <p class="text-sm"><?= date("d/m/Y", strtotime($single->created_at)) ?></p>
                 </div>
             </div>
         <?php }?>

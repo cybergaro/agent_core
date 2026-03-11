@@ -34,6 +34,36 @@
         </div>
       </div>
 
+      <?php 
+        if($message->id_property){
+          $property = $message->getProperty()
+      ?>
+        <div class="mb-4">
+          <span class="block text-sm font-medium text-gray-500">Immobile</span>
+          <a 
+            class="block text-base text-sm underline text-blue-600"
+            href="/dashboard/<?= $agency->uuid ?>/property/<?= $property->uuid ?>"
+          >
+            <?= $property->name ?>
+          </a>
+        </div>
+      <?php } ?>
+
+      <?php 
+        if($message->id_construction_site){
+          $site = $message->getConstructionSite()
+      ?>
+        <div class="mb-4">
+          <span class="block text-sm font-medium text-gray-500">Cantiere</span>
+          <a 
+            class="block text-base text-sm underline text-blue-600"
+            href="/dashboard/<?= $site->uuid ?>/construction_site/<?= $site->uuid ?>"
+          >
+            <?= $site->name ?>
+          </a>
+        </div>
+      <?php } ?>
+
       <div class="bg-gray-50 rounded-lg p-4 border border-gray-100">
         <span class="block text-sm font-medium text-gray-500 mb-1">Messaggio / Descrizione</span>
         <p class="text-gray-800 text-base">
@@ -41,6 +71,16 @@
         </p>
       </div>
 
+      <?php if($message->json) { ?>      
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-100 mt-4">
+          <span class="block text-sm font-medium text-gray-500 mb-1">Altre informazioni</span>
+          <p class="text-gray-800 text-base">
+            <?php foreach (json_decode($message->json) as $key => $value) {?>
+              <?= $key ?>: <?= $value ?> <br>
+            <?php } ?>
+          </p>
+        </div>
+      <?php } ?>
     </div>
 
     <div class="px-6 py-4 border-t border-gray-100 bg-gray-50 flex justify-end">
