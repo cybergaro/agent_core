@@ -147,6 +147,7 @@ class DashController extends Controller
         
         $agency->google_cloud_credentials = $request->input("google_cloud_credentials");
         $agency->google_sheet_id = $request->input("google_sheet_id");
+        $agency->google_sheet_name = $request->input("google_sheet_name");
 
         $agency->save();
 

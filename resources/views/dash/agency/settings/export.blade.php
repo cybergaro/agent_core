@@ -41,16 +41,30 @@
                 ><?= $agency->google_cloud_credentials ?></textarea>
             </div>
 
-            <div class="flex flex-col mt-6">
-                <label for="google_sheet_id" class="text-sm font-semibold">Spreadsheet ID<span class="text-red-500">*</span></label>
-                <input
-                    type="text"
-                    name="google_sheet_id"
-                    id="google_sheet_id"
-                    placeholder="Es: https://gestim2002.it/portali/xxx.xml"
-                    value="<?= $agency->google_sheet_id ?>"
-                    class="mt-1 border border-gray-300 rounded-lg outline-none px-4 py-3 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 w-100"
-                >
+            <div class="flex gap-6">
+                <div class="flex flex-col mt-6">
+                    <label for="google_sheet_id" class="text-sm font-semibold">Spreadsheet ID<span class="text-red-500">*</span></label>
+                    <input
+                        type="text"
+                        name="google_sheet_id"
+                        id="google_sheet_id"
+                        placeholder="Es: 1T_0_FYdIrfhM_vOKIM4bifUE5gXZwcmqDHxZp7mYYh0"
+                        value="<?= $agency->google_sheet_id ?>"
+                        class="mt-1 border border-gray-300 rounded-lg outline-none px-4 py-3 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 w-100"
+                    >
+                </div>
+                
+                <div class="flex flex-col mt-6">
+                    <label for="google_sheet_id" class="text-sm font-semibold">Sheet Name<span class="text-red-500">*</span></label>
+                    <input
+                        type="text"
+                        name="google_sheet_name"
+                        id="google_sheet_name"
+                        placeholder="Es: Tab 1"
+                        value="<?= $agency->google_sheet_name ?>"
+                        class="mt-1 border border-gray-300 rounded-lg outline-none px-4 py-3 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 w-100"
+                    >
+                </div>
             </div>
         </div>
     </div>
