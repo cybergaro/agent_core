@@ -461,7 +461,7 @@ class ApiController extends Controller
 
             $service = new \Google_Service_Sheets($client);
 
-            $range = 'Foglio1!A:D'; 
+            $range = $agency->google_sheet_name.'!A:D'; 
 
             $categoryTranslations = [
                 'buy'          => 'Cerco un immobile da acquistare',
