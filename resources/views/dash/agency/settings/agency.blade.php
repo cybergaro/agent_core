@@ -58,7 +58,6 @@
     <div class="mt-6">
         <p class="text-sm">Id: <span class="font-bold"><?= $agency->id ?></span></p>
         <p class="text-sm">Uuid: <span class="font-bold"><?= $agency->uuid ?></span></p>
-        <p class="text-sm">Id owner: <span class="font-bold"><?= $agency->id_user_owner ?></span></p>
 
     </div>
 </form>
