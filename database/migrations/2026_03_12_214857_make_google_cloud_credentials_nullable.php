@@ -11,6 +11,7 @@ return new class extends Migration
     {
         Schema::table('agencies', function (Blueprint $table) {
             $table->text('google_cloud_credentials')->nullable()->change();
+            $table->text('google_sheet_id')->nullable()->change();
         });
     }
 
@@ -19,6 +20,7 @@ return new class extends Migration
     {
         Schema::table('agencies', function (Blueprint $table) {
             $table->text('google_cloud_credentials')->nullable(false)->change();
+            $table->text('google_sheet_id')->nullable(false)->change();
         });
     }
 };
