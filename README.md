@@ -62,13 +62,20 @@ Follow these steps to set up your project in a development environment:
 ```bash
     git clone github.com/cybergaro/agent_core
 ```
-2. **Install backend and frontend dependencies:**
+
+2. **Install dependencies:**
+```bash
+apt install php8.3-xml php8.3-fpm php8.3-mysql
+```
+
+3. **Install backend and frontend dependencies:**
 ```bash
     composer install
     npm install
     npm run build
 ```
-3. **Setting up the environment:**
+
+4. **Setting up the environment:**
 Copy the sample configuration file and generate the application security key.
 ```bash
     cp .env.example .env
