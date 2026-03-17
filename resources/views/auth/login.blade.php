@@ -52,11 +52,6 @@
                    value="Accedi"
                    class="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 mt-6 font-medium transition"
             >
-
-            <p class="text-center text-sm mt-4 text-gray-600">
-                Non hai un account?
-                <a href="/registration" class="text-blue-600 hover:underline">Registrati</a>
-            </p>
         </form>
     </div>
 

@@ -65,7 +65,7 @@ Follow these steps to set up your project in a development environment:
 
 2. **Install dependencies:**
 ```bash
-apt install php8.3-xml php8.3-fpm php8.3-mysql
+    apt install php8.3-xml php8.3-fpm php8.3-mysql
 ```
 
 3. **Install backend and frontend dependencies:**
