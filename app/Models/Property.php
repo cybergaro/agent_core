@@ -27,7 +27,7 @@ class Property extends Model
     }
 
     public function floorPlans(){
-        return PropertyFloor::where("id_property", $this->id)->get();
+        return PropertyFloorPlan::where("id_property", $this->id)->get();
     }
 
     protected static function boot()
@@ -41,4 +41,22 @@ class Property extends Model
         });
 
     }    
+
+    protected static function booted()
+    {
+        static::deleting(function ($property) {
+
+            foreach ($property->images() as $img) {
+                $img->delete(); 
+            }
+
+            foreach ($property->images360() as $img) {
+                $img->delete(); 
+            }
+
+            foreach ($property->floorPlans() as $plan) {
+                $plan->delete(); 
+            }
+        });
+    }
 }
