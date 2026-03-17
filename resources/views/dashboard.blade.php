@@ -48,7 +48,10 @@ $options = [
 
                     <div class="flex items-center gap-3 px-6 py-5 bg-white rounded-3xl">
                         <img src="/img/logoBlu.png" alt="Logo Agent Core" class="h-10 w-10">
-                        <span class="text-xl font-semibold text-gray-800">Agent Core</span>
+                        <div>
+                            <span class="text-xl font-semibold text-gray-800">Agent Core</span>
+                            <p class="text-[10px] opacity-80">By <a href="https://francescogarofolo.com" class="underline">Francesco Garofolo</a></p>
+                        </div>
                     </div>
 
                     <!-- Menu -->

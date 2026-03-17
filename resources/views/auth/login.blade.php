@@ -58,7 +58,10 @@
     <div class="hidden md:flex w-1/2 bg-blue-700 items-center justify-center">
         <div class="flex items-center gap-4">
             <img src="/img/logoBianco.png" alt="Logo Agent Core" class="h-14 w-14">
-            <p class="text-white font-semibold text-3xl">Agent Core</p>
+            <div>
+                <p class="text-white font-semibold text-3xl">Agent Core</p>
+                <p class="text-white text-sm opacity-80">By <a href="https://francescogarofolo.com" class="underline">Francesco Garofolo</a></p>
+            </div>
         </div>
     </div>
 </div>
