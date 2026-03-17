@@ -11,4 +11,13 @@ use Illuminate\Support\Str;
 class PropertyImage extends Model
 { 
     protected $table = 'properties_images';
+
+    protected static function booted()
+    {
+        static::deleting(function ($img) {
+            if($img->path){
+                Storage::disk('public')->delete("properties_images/".$img->path);
+            }
+        });
+    }
 }

@@ -12,4 +12,12 @@ class PropertyFloorPlan extends Model
 { 
     protected $table = 'properties_floor_plans';
 
+    protected static function booted()
+    {
+        static::deleting(function ($img) {
+            if($img->path){
+                Storage::disk('public')->delete("properties_floor_plans/".$img->path);
+            }
+        });
+    }
 }

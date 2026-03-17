@@ -133,26 +133,6 @@ class PropertiesController extends Controller
         if(!$property){
             dd("Immobile non esistente");
         }
-
-        foreach ($property->images() as $img) {
-            if($img->path){
-                Storage::disk('public')->delete($img->path);
-            }
-        }
-        foreach ($property->images360() as $img) {
-            if($img->path){
-                Storage::disk('public')->delete($img->path);
-            }
-        }
-        foreach ($property->floorPlans() as $plan) {
-            if ($plan->path) {
-                Storage::disk('public')->delete($plan->path);
-            }
-        }
-
-        PropertyImage::where("id_property", $property->id)->delete();
-        PropertyImage360::where("id_property", $property->id)->delete();
-        PropertyFloorPlan::where("id_property", $property->id)->delete();
         
         $property->delete();
 

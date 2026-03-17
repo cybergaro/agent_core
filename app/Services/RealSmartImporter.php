@@ -143,63 +143,117 @@ class RealSmartImporter
 
             $property->save();
 
-            // IMMAGINI (solo se nuove)
-            if ($isNew || $property->images()->count() === 0) {
-                foreach ($single->ElencoFoto->Foto ?? [] as $imageUrl) {
-                    $path = $this->downloadAndStoreImage((string) $imageUrl, 'properties_images');
-
-                    if($path){
-                        $img = new PropertyImage();
-                        $img->id_property = $property->id;
-                        $img->path = $path;
-                        $img->save();
-                    }
-                }
-            }
-
-            // IMMAGINI 360
-            if ($isNew || $property->images360()->count() === 0) {
-                foreach ($single->ElencoFoto360->Foto360 ?? [] as $img360Url) {
-                    $path = $this->downloadAndStoreImage((string) $img360Url, 'properties_360_images');
-
-                    if($path){
-                        $img = new PropertyImage360();
-                        $img->id_property = $property->id;
-                        $img->path = $path;
-                        $img->save();
-                    }
-                }
-            }
-
-            // PLANIMETRIE
-            if ($isNew || $property->floorPlans()->count() === 0) {
-
-                // controllo se ho un piano
-                $floor = PropertyFloor::where("id_property", $property->id)->first();
-                if(!$floor){
-                    $floor = new PropertyFloor;
-                    $floor->id_property = $property->id;
-                    $floor->save();
-                }
-
-                foreach ([$single->Planimetria, $single->Planimetria2] as $planUrl) {
-                    if ($planUrl) {
-                        $path = $this->downloadAndStoreImage((string) $planUrl, 'properties_floor_plans');
-                        
-                        if($path){
-                            $img = new PropertyFloorPlan();
-                            $img->id_property = $property->id;
-                            $img->id_property_floor = $floor->id;
-                            $img->path = $path;
-                            $img->save();
-                        }
-                    }
-                }
-            }
+            $this->updateMedia($single, $property);
+            
         }catch (\Throwable $e) {
             Log::new('Error importing property "'.$single->Codice.'" "'.$agency->name.'" from Real Smart \n'.$e->getMessage(), 'error');
         }
     }
+
+    private function updateMedia($single, $property) {
+        // IMMAGINI
+        $incomingImageUrls = [];
+        foreach ($single->ElencoFoto->Foto ?? [] as $imageUrl) {
+            $incomingImageUrls[] = (string) $imageUrl;
+        }
+
+        $existingImages = $property->images(); 
+        $existingImageUrls = $existingImages->pluck('original_url')->toArray();
+
+        // Elimina le immagini non più presenti in $single
+        foreach ($existingImages as $existingImage) {
+            if (!in_array($existingImage->original_url, $incomingImageUrls)) {
+                $existingImage->delete(); 
+            }
+        }
+
+        // Scarica e salva solo le NUOVE immagini
+        foreach ($incomingImageUrls as $url) {
+            if (!in_array($url, $existingImageUrls)) {
+                $path = $this->downloadAndStoreImage($url, 'properties_images');
+
+                if ($path) {
+                    $img = new PropertyImage();
+                    $img->id_property = $property->id;
+                    $img->path = $path;
+                    $img->original_url = $url;
+                    $img->save();
+                }
+            }
+        }
+
+        // IMMAGINI 360
+        $incoming360Urls = [];
+        foreach ($single->ElencoFoto360->Foto360 ?? [] as $img360Url) {
+            $incoming360Urls[] = (string) $img360Url;
+        }
+
+        $existing360Images = $property->images360();
+        $existing360Urls = $existing360Images->pluck('original_url')->toArray();
+
+        foreach ($existing360Images as $existing360Image) {
+            if (!in_array($existing360Image->original_url, $incoming360Urls)) {
+                $existing360Image->delete();
+            }
+        }
+
+        foreach ($incoming360Urls as $url) {
+            if (!in_array($url, $existing360Urls)) {
+                $path = $this->downloadAndStoreImage($url, 'properties_360_images');
+
+                if ($path) {
+                    $img = new PropertyImage360();
+                    $img->id_property = $property->id;
+                    $img->path = $path;
+                    $img->original_url = $url;
+                    $img->save();
+                }
+            }
+        }
+
+        // PLANIMETRIE
+        $incomingPlanUrls = [];
+        foreach ([$single->Planimetria, $single->Planimetria2] as $planUrl) {
+            if (!empty($planUrl)) {
+                $incomingPlanUrls[] = (string) $planUrl;
+            }
+        }
+
+        $existingPlans = $property->floorPlans();
+        $existingPlanUrls = $existingPlans->pluck('original_url')->toArray();
+
+        foreach ($existingPlans as $existingPlan) {
+            if (!in_array($existingPlan->original_url, $incomingPlanUrls)) {
+                $existingPlan->delete();
+            }
+        }
+
+        $newPlanUrls = array_diff($incomingPlanUrls, $existingPlanUrls);
+
+        if (!empty($newPlanUrls)) {
+            
+            $floor = PropertyFloor::where("id_property", $property->id)->first();
+            if (!$floor) {
+                $floor = new PropertyFloor;
+                $floor->id_property = $property->id;
+                $floor->save();
+            }
+
+            foreach ($newPlanUrls as $url) {
+                $path = $this->downloadAndStoreImage($url, 'properties_floor_plans');
+                
+                if ($path) {
+                    $img = new PropertyFloorPlan();
+                    $img->id_property = $property->id;
+                    $img->id_property_floor = $floor->id;
+                    $img->path = $path;
+                    $img->original_url = $url;
+                    $img->save();
+                }
+            }
+        }
+    }
+
 
     private function downloadAndStoreImage(string $url, string $directory)
     {
@@ -235,27 +289,6 @@ class RealSmartImporter
             ->get();
 
         foreach ($toDelete as $property) {
-
-            foreach ($property->images() as $img) {
-                if($img->path){
-                    Storage::disk('public')->delete($img->path);
-                }
-            }
-            foreach ($property->images360() as $img) {
-                if($img->path){
-                    Storage::disk('public')->delete($img->path);
-                }
-            }
-            foreach ($property->floorPlans() as $plan) {
-                if ($plan->path) {
-                    Storage::disk('public')->delete($plan->path);
-                }
-            }
-
-            PropertyImage::where("id_property", $property->id)->delete();
-            PropertyImage360::where("id_property", $property->id)->delete();
-            PropertyFloorPlan::where("id_property", $property->id)->delete();
-            
             $property->delete();
         }
     }
