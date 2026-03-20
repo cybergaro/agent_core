@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -182,13 +183,33 @@ class DashController extends Controller
         return view("dash.agency.settings.agency", compact("agency"));
     }
 
-    public function agencySettings($agencyUuid, Request $request){
-        $agency = Agency::where("uuid", $agencyUuid)->first();
+    public function agencySettings($agencyUuid, Request $request)
+    {
+        $agency = Agency::where("uuid", $agencyUuid)->firstOrFail();
 
-        $agency->name =         $request->input("name");
-        $agency->email =        $request->input("email");
-        $agency->phone =        $request->input("phone");
-        $agency->website =      $request->input("website");
+        $request->validate([
+            'name'    => 'required|string|max:255',
+            'email'   => 'required|email|max:255',
+            'phone'   => 'required|string|max:20',
+            'website' => 'nullable|string|max:255',
+            'logo'    => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048', // Max 2MB, solo immagini
+        ]);
+
+        $agency->name    = $request->input("name");
+        $agency->email   = $request->input("email");
+        $agency->phone   = $request->input("phone");
+        $agency->website = $request->input("website");
+
+        if ($request->hasFile('logo')) {
+            if ($agency->logo && Storage::disk('public')->exists($agency->logo)) {
+                Storage::disk('public')->delete($agency->logo);
+            }
+
+            $path = $request->file('logo')->store('logos', 'public');
+            
+            $agency->logo = $path; 
+        }
+
         $agency->save();
 
         return redirect()->back()->withSuccess("Impostazioni modificate");

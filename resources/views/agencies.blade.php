@@ -10,7 +10,7 @@
         <a href="/dashboard/<?= $agency->uuid ?>" class="group block rounded-2xl bg-white p-6 transform transition-all duration-200 hover:outline-none hover:ring-2 hover:ring-offset-2 hover:ring-indigo-500">
             <div class="flex items-start gap-4">
                 <div class="flex-shrink-0">
-                    <img src="/img/logoBlu.png" alt="Logo" class="h-14 w-14 object-cover">
+                    <img src="<?= $agency->logo ? "/storage/".$agency->logo : "/img/logoBlu.png" ?>" alt="Logo" class="h-14 w-14 object-cover rounded-lg">
                 </div>
 
                 <div>
