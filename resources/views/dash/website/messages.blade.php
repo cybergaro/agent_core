@@ -45,7 +45,32 @@
     <div id="viewMessage">
 
     </div>
-</div>  
+
+    @if($messages->count() > 0)
+        <div class="rounded-xl h-10 flex items-center overflow-x-auto bg-white w-fit mt-5">
+            @php 
+                $current = $messages->currentPage();
+            @endphp
+            
+            <button class="rounded-xl cursor-pointer h-full text-gray-600 px-3 w-10 hover:bg-gray-200" onclick="location.href='?page={{ $current > 1 ? $current-1 : 1 }}'">
+                <i class="fa-solid fa-angle-left"></i>
+            </button>
+            
+            @for ($i = 1; $i <= $messages->lastPage(); $i++)
+                <button 
+                    class="px-2 h-full w-10 cursor-pointer rounded-xl {{ $current == $i ? 'bg-blue-600 text-white' : 'hover:bg-gray-200 text-gray-600' }} font-semibold transition-colors" 
+                    onclick="location.href='?page={{ $i }}'"
+                >
+                    {{ $i }}
+                </button>
+            @endfor
+            
+            <button class="rounded-xl cursor-pointer h-full text-gray-600 px-3 w-10 hover:bg-gray-200" onclick="location.href='?page={{ $messages->lastPage() != $current ? $current+1 : $current }}'">
+                <i class="fa-solid fa-angle-right"></i>
+            </button>
+        </div>
+    @endif
+</div>
 
 <script>
     const viewEmail = async (id) => {
