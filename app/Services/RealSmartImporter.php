@@ -260,7 +260,7 @@ class RealSmartImporter
 
     private function removeDuplicateEntries($relation) {
         // Raggruppa i record per original_url e conta quanti ce ne sono
-        $duplicates = $relation->get()->groupBy('original_url')->filter(function ($group) {
+        $duplicates = $relation->groupBy('original_url')->filter(function ($group) {
             return $group->count() > 1;
         });
 
