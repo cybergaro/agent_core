@@ -228,7 +228,7 @@ class DashController extends Controller
         $title = "Messaggi";
         $agency = Agency::where("uuid", $agencyUuid)->first();
 
-        $messages = Message::where("id_agency", $agency->id)->orderBy("id", "DESC")->get();
+        $messages = Message::where("id_agency", $agency->id)->orderBy("id", "DESC")->paginate(20);
 
         return view("dash.website.messages", compact("agency", "title", "messages"));
     }

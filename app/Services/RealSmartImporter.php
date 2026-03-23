@@ -160,7 +160,7 @@ class RealSmartImporter
         $existingImages = $property->images(); 
         $existingImageUrls = $existingImages->pluck('original_url')->toArray();
 
-        // Elimina le immagini non più presenti in $single
+        // Elimina le immagini non più presenti 
         foreach ($existingImages as $existingImage) {
             if (!in_array($existingImage->original_url, $incomingImageUrls)) {
                 $existingImage->delete(); 
@@ -181,6 +181,8 @@ class RealSmartImporter
                 }
             }
         }
+
+        $this->removeDuplicateEntries($property->images());
 
         // IMMAGINI 360
         $incoming360Urls = [];
@@ -210,6 +212,8 @@ class RealSmartImporter
                 }
             }
         }
+
+        $this->removeDuplicateEntries($property->images360());
 
         // PLANIMETRIE
         $incomingPlanUrls = [];
@@ -254,6 +258,20 @@ class RealSmartImporter
         }
     }
 
+    private function removeDuplicateEntries($relation) {
+        // Raggruppa i record per original_url e conta quanti ce ne sono
+        $duplicates = $relation->get()->groupBy('original_url')->filter(function ($group) {
+            return $group->count() > 1;
+        });
+
+        foreach ($duplicates as $url => $items) {
+            // Mantieni il primo record e prendi gli altri per l'eliminazione
+            $toDelete = $items->slice(1); 
+            foreach ($toDelete as $model) {
+                $model->delete();
+            }
+        }
+    }
 
     private function downloadAndStoreImage(string $url, string $directory)
     {
