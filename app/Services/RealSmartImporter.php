@@ -93,8 +93,8 @@ class RealSmartImporter
             $property->city = (string) $single->Comune;
             $property->area = (string) $single->Zona;
             $property->address = (string) $single->Indirizzo;
-            $property->longitude = (float) $single->Lng;
-            $property->latitude = (float) $single->Lat;
+            $property->longitude = (float) str_replace(',', '.', (string) $single->Lng);
+            $property->latitude = (float) str_replace(',', '.', (string) $single->Lat);
             $property->size = (int) $single->Mq;
             $property->year_production = (int) $single->AnnoCostruzione;
             $property->condominium_fees = (string) $single->SpeseCondominiali;
